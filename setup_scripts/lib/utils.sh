@@ -33,7 +33,10 @@ check_dependencies() {
     done
 
     if [ ${#missing[@]} -gt 0 ]; then
-        log_info "Instalando dependencias faltantes: ${missing[*]}..."
+        # Nota: STR_MISSING_DEPS podría no estar cargado aún si whiptail no está
+        # pero como whiptail se instala aquí, usamos un texto base si no existe la var
+        local msg="${STR_MISSING_DEPS:-Instalando dependencias faltantes: }"
+        echo -e "${BLUE}${INFO} $msg ${missing[*]}...${NC}"
         sudo dnf install -y newt jq curl
     fi
 }

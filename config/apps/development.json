@@ -1,0 +1,217 @@
+{
+  "id": "development",
+  "name": "Desarrollo e IA",
+  "name_en": "Development and AI",
+  "apps": [
+    {
+      "id": "git",
+      "name": "Git",
+      "description": {
+        "es": "Sistema de control de versiones distribuido.",
+        "en": "Distributed version control system."
+      },
+      "dnf_pkg": "git",
+      "priority": ["dnf"]
+    },
+    {
+      "id": "code",
+      "name": "VS Code",
+      "description": {
+        "es": "Editor de Microsoft con gran ecosistema de extensiones.",
+        "en": "Microsoft editor with a large ecosystem of extensions."
+      },
+      "dnf_pkg": "code",
+      "repo_func": "add_vscode_repo",
+      "flatpak_id": "com.visualstudio.code",
+      "priority": ["dnf", "flatpak"]
+    },
+    {
+      "id": "vscodium",
+      "name": "VSCodium",
+      "description": {
+        "es": "Version de VS Code 100% libre, sin telemetria.",
+        "en": "100% free VS Code version, without telemetry."
+      },
+      "dnf_pkg": "vscodium",
+      "repo_func": "add_vscodium_repo",
+      "flatpak_id": "com.vscodium.codium",
+      "priority": ["dnf", "flatpak"]
+    },
+    {
+      "id": "zed",
+      "name": "Zed Editor",
+      "description": {
+        "es": "Editor de codigo de alto rendimiento escrito en Rust.",
+        "en": "High-performance code editor written in Rust."
+      },
+      "flatpak_id": "dev.zed.Zed",
+      "priority": ["flatpak"]
+    },
+    {
+      "id": "cursor",
+      "name": "Cursor AI",
+      "description": {
+        "es": "Editor de codigo optimizado para programar con IA.",
+        "en": "Code editor optimized for programming with AI."
+      },
+      "custom_func": "install_cursor",
+      "priority": ["custom"]
+    },
+    {
+      "id": "ollama",
+      "name": "Ollama",
+      "description": {
+        "es": "Servidor local de LLMs (Llama 3, Phi, etc.).",
+        "en": "Local server for LLMs (Llama 3, Phi, etc.)."
+      },
+      "custom_func": "install_ollama",
+      "priority": ["custom"],
+      "repair": "sudo systemctl restart ollama"
+    },
+    {
+      "id": "github-desktop",
+      "name": "GitHub Desktop",
+      "description": {
+        "es": "Interfaz grafica intuitiva para gestionar Git y GitHub.",
+        "en": "Intuitive graphical interface to manage Git and GitHub."
+      },
+      "dnf_pkg": "GitHubDesktop",
+      "repo_func": "add_github_desktop_repo",
+      "priority": ["dnf"]
+    },
+    {
+      "id": "distrobox",
+      "name": "Distrobox",
+      "description": {
+        "es": "Usa cualquier distribucion Linux dentro de tu terminal.",
+        "en": "Use any Linux distribution inside your terminal."
+      },
+      "dnf_pkg": "distrobox",
+      "priority": ["dnf"]
+    },
+    {
+      "id": "podman-desktop",
+      "name": "Podman Desktop",
+      "description": {
+        "es": "Interfaz para gestionar contenedores con Podman.",
+        "en": "Interface to manage containers with Podman."
+      },
+      "flatpak_id": "io.podman_desktop.PodmanDesktop",
+      "priority": ["flatpak"]
+    },
+    {
+      "id": "dbeaver",
+      "name": "DBeaver",
+      "description": {
+        "es": "Gestor de bases de datos universal y gratuito.",
+        "en": "Universal and free database manager."
+      },
+      "flatpak_id": "io.dbeaver.DBeaverCommunity",
+      "priority": ["flatpak"]
+    },
+    {
+      "id": "lazydocker",
+      "name": "LazyDocker",
+      "description": {
+        "es": "Interfaz de terminal para Docker y Docker Compose.",
+        "en": "Terminal interface for Docker and Docker Compose."
+      },
+      "dnf_pkg": "lazydocker",
+      "repo_func": "add_lazydocker_repo",
+      "priority": ["dnf"]
+    },
+    {
+      "id": "warp-terminal",
+      "name": "Warp Terminal",
+      "description": {
+        "es": "Terminal moderna impulsada por IA.",
+        "en": "Modern terminal powered by AI."
+      },
+      "dnf_pkg": "warp-terminal",
+      "repo_func": "add_warp_repo",
+      "priority": ["dnf"]
+    },
+    {
+      "id": "fzf",
+      "name": "fzf",
+      "description": {
+        "es": "Buscador difuso de linea de comandos.",
+        "en": "Command line fuzzy finder."
+      },
+      "dnf_pkg": "fzf",
+      "priority": ["dnf"]
+    },
+    {
+      "id": "android-studio",
+      "name": "Android Studio",
+      "description": {
+        "es": "Entorno oficial para apps moviles Android.",
+        "en": "Official environment for Android mobile apps."
+      },
+      "flatpak_id": "com.google.AndroidStudio",
+      "priority": ["flatpak"]
+    },
+    {
+      "id": "unityhub",
+      "name": "Unity Hub",
+      "description": {
+        "es": "Gestor oficial para instalar versiones del motor Unity.",
+        "en": "Official manager to install Unity engine versions."
+      },
+      "dnf_pkg": "unityhub",
+      "repo_func": "add_unity_repo",
+      "priority": ["dnf"]
+    },
+    {
+      "id": "godot-net",
+      "name": "Godot Engine .NET",
+      "description": {
+        "es": "Motor de juegos ligero con soporte para C#.",
+        "en": "Lightweight game engine with C# support."
+      },
+      "flatpak_id": "org.godotengine.GodotSharp",
+      "priority": ["flatpak"]
+    },
+    {
+      "id": "dotnet-full",
+      "name": "NET 10 SDK",
+      "description": {
+        "es": "Kit de desarrollo completo de Microsoft.",
+        "en": "Full Microsoft development kit."
+      },
+      "custom_func": "install_dotnet_full",
+      "priority": ["custom"]
+    },
+    {
+      "id": "docker",
+      "name": "Docker Desktop",
+      "description": {
+        "es": "Contenedores para desarrollar y ejecutar aplicaciones.",
+        "en": "Containers to develop and run applications."
+      },
+      "custom_func": "install_docker_full",
+      "priority": ["custom"],
+      "repair": "sudo systemctl enable --now docker && sudo usermod -aG docker $USER"
+    },
+    {
+      "id": "nodejs",
+      "name": "Node.js & NPM",
+      "description": {
+        "es": "Entorno de ejecucion para JS en servidor y NPM.",
+        "en": "Runtime environment for JS on server and NPM."
+      },
+      "dnf_pkg": "nodejs",
+      "priority": ["dnf"]
+    },
+    {
+      "id": "antigravity",
+      "name": "Antigravity Agent",
+      "description": {
+        "es": "Configuracion del asistente inteligente para mantenimiento del sistema.",
+        "en": "Intelligent assistant setup for system maintenance."
+      },
+      "custom_func": "setup_antigravity",
+      "priority": ["custom"]
+    }
+  ]
+}

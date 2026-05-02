@@ -1,0 +1,28 @@
+{
+  "repair_tools": [
+    {
+      "id": "dnf_clean",
+      "name": {
+        "es": "Limpiar Cache DNF",
+        "en": "Clean DNF Cache"
+      },
+      "command": "sudo dnf clean all && sudo dnf makecache"
+    },
+    {
+      "id": "flatpak_repair",
+      "name": {
+        "es": "Reparar Flatpaks",
+        "en": "Repair Flatpaks"
+      },
+      "command": "sudo flatpak repair"
+    },
+    {
+      "id": "rpm_fix",
+      "name": {
+        "es": "Reparar RPM Fusion",
+        "en": "Fix RPM Fusion"
+      },
+      "command": "sudo dnf install -y rpmfusion-free-release rpmfusion-nonfree-release --forcearch"
+    }
+  ]
+}

@@ -1,0 +1,129 @@
+{
+  "id": "productivity",
+  "name": "Productividad y Ofimática",
+  "name_en": "Productivity and Office",
+  "apps": [
+    {
+      "id": "keepassxc",
+      "name": "KeePassXC",
+      "description": {
+        "es": "Gestor de contraseñas offline y seguro.",
+        "en": "Offline and secure password manager."
+      },
+      "dnf_pkg": "keepassxc",
+      "flatpak_id": "org.keepassxc.KeePassXC",
+      "priority": ["dnf", "flatpak"]
+    },
+    {
+      "id": "calibre",
+      "name": "Calibre",
+      "description": {
+        "es": "Gestor de biblioteca de libros electronicos.",
+        "en": "E-book library manager."
+      },
+      "dnf_pkg": "calibre",
+      "flatpak_id": "com.calibre_ebook.calibre",
+      "priority": ["dnf", "flatpak"]
+    },
+    {
+      "id": "appflowy",
+      "name": "AppFlowy",
+      "description": {
+        "es": "Alternativa abierta a Notion para gestionar proyectos.",
+        "en": "Open alternative to Notion for project management."
+      },
+      "flatpak_id": "io.appflowy.AppFlowy",
+      "priority": ["flatpak"]
+    },
+    {
+      "id": "bottles",
+      "name": "Bottles",
+      "description": {
+        "es": "Ejecuta software de Windows facilmente en Linux.",
+        "en": "Run Windows software easily on Linux."
+      },
+      "flatpak_id": "com.usebottles.bottles",
+      "priority": ["flatpak"]
+    },
+    {
+      "id": "virt-manager",
+      "name": "Virt Manager",
+      "description": {
+        "es": "Gestor de maquinas virtuales (KVM/QEMU).",
+        "en": "Virtual machine manager (KVM/QEMU)."
+      },
+      "dnf_pkg": "virt-manager",
+      "priority": ["dnf"]
+    },
+    {
+      "id": "isomaster",
+      "name": "ISO Master",
+      "description": {
+        "es": "Editor grafico de archivos de imagen ISO.",
+        "en": "Graphical editor for ISO image files."
+      },
+      "dnf_pkg": "isomaster",
+      "priority": ["dnf"]
+    },
+    {
+      "id": "gear-lever",
+      "name": "Gear Lever",
+      "description": {
+        "es": "Gestiona y organiza tus AppImages facilmente.",
+        "en": "Manage and organize your AppImages easily."
+      },
+      "flatpak_id": "it.miurelli.gearlever",
+      "priority": ["flatpak"]
+    },
+    {
+      "id": "appimagepool",
+      "name": "AppImage Pool",
+      "description": {
+        "es": "Tienda de aplicaciones cliente para AppImageHub.",
+        "en": "Client application store for AppImageHub."
+      },
+      "flatpak_id": "io.github.prateekmedia.appimagepool",
+      "priority": ["flatpak"]
+    },
+    {
+      "id": "boxbuddy",
+      "name": "BoxBuddy",
+      "description": {
+        "es": "Interfaz grafica amigable para Distrobox.",
+        "en": "Friendly graphical interface for Distrobox."
+      },
+      "flatpak_id": "io.github.dvlv.boxbuddyrs",
+      "priority": ["flatpak"]
+    },
+    {
+      "id": "rclone",
+      "name": "Rclone",
+      "description": {
+        "es": "Herramienta de linea de comandos para gestionar archivos en la nube.",
+        "en": "Command line tool to manage cloud files."
+      },
+      "dnf_pkg": "rclone",
+      "priority": ["dnf"]
+    },
+    {
+      "id": "rclone-browser",
+      "name": "Rclone Browser",
+      "description": {
+        "es": "Interfaz grafica para gestionar tus nubes con Rclone.",
+        "en": "Graphical interface to manage your clouds with Rclone."
+      },
+      "flatpak_id": "io.github.kapitainsky.RcloneBrowser",
+      "priority": ["flatpak"]
+    },
+    {
+      "id": "onlyoffice",
+      "name": "OnlyOffice",
+      "description": {
+        "es": "Suite ofimatica con gran compatibilidad MS Office.",
+        "en": "Office suite with great MS Office compatibility."
+      },
+      "flatpak_id": "org.onlyoffice.desktopeditors",
+      "priority": ["flatpak"]
+    }
+  ]
+}

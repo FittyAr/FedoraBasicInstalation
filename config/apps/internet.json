@@ -1,0 +1,178 @@
+{
+  "id": "internet",
+  "name": "Internet y Comunicacion",
+  "name_en": "Internet and Communication",
+  "apps": [
+    {
+      "id": "brave-browser",
+      "name": "Brave Browser",
+      "description": {
+        "es": "Navegador veloz con bloqueo de anuncios integrado.",
+        "en": "Fast browser with built-in ad blocking."
+      },
+      "dnf_pkg": "brave-browser",
+      "repo_func": "add_brave_repo",
+      "flatpak_id": "com.brave.Browser",
+      "priority": ["dnf", "flatpak"]
+    },
+    {
+      "id": "google-chrome",
+      "name": "Google Chrome",
+      "description": {
+        "es": "El navegador mas usado, con sincronizacion de Google.",
+        "en": "The most used browser, with Google synchronization."
+      },
+      "dnf_pkg": "google-chrome-stable",
+      "repo_func": "add_google_chrome_repo",
+      "priority": ["dnf"]
+    },
+    {
+      "id": "telegram",
+      "name": "Telegram Desktop",
+      "description": {
+        "es": "Mensajeria rapida, segura y multidispositivo.",
+        "en": "Fast, secure, and multi-device messaging."
+      },
+      "dnf_pkg": "telegram-desktop",
+      "flatpak_id": "org.telegram.desktop",
+      "priority": ["dnf", "flatpak"]
+    },
+    {
+      "id": "discord",
+      "name": "Discord",
+      "description": {
+        "es": "Plataforma de comunicacion para comunidades y gamers.",
+        "en": "Communication platform for communities and gamers."
+      },
+      "dnf_pkg": "discord",
+      "flatpak_id": "com.discordapp.Discord",
+      "priority": ["dnf", "flatpak"]
+    },
+    {
+      "id": "yt-music",
+      "name": "YouTube Music",
+      "description": {
+        "es": "Cliente de escritorio para YouTube Music.",
+        "en": "Desktop client for YouTube Music."
+      },
+      "flatpak_id": "it.thub.YouTubeMusic",
+      "priority": ["flatpak"]
+    },
+    {
+      "id": "bitwarden",
+      "name": "Bitwarden",
+      "description": {
+        "es": "Gestor de contraseñas seguro y de codigo abierto.",
+        "en": "Secure and open-source password manager."
+      },
+      "flatpak_id": "com.bitwarden.desktop",
+      "priority": ["flatpak"]
+    },
+    {
+      "id": "localsend",
+      "name": "LocalSend",
+      "description": {
+        "es": "Comparte archivos localmente de forma facil.",
+        "en": "Share files locally easily."
+      },
+      "flatpak_id": "org.localsend.localsend_app",
+      "priority": ["flatpak"]
+    },
+    {
+      "id": "warpinator",
+      "name": "Warpinator",
+      "description": {
+        "es": "Herramienta de envio de archivos por red local.",
+        "en": "Local network file transfer tool."
+      },
+      "dnf_pkg": "warpinator",
+      "flatpak_id": "org.x.Warpinator",
+      "priority": ["dnf", "flatpak"]
+    },
+    {
+      "id": "syncthing",
+      "name": "Syncthing",
+      "description": {
+        "es": "Sincronizacion de archivos continua y privada.",
+        "en": "Continuous and private file synchronization."
+      },
+      "dnf_pkg": "syncthing",
+      "flatpak_id": "me.kozec.syncthingtk",
+      "priority": ["dnf", "flatpak"]
+    },
+    {
+      "id": "barrier",
+      "name": "Barrier",
+      "description": {
+        "es": "Comparte raton y teclado entre varios PCs.",
+        "en": "Share mouse and keyboard between multiple PCs."
+      },
+      "dnf_pkg": "barrier",
+      "flatpak_id": "com.github.debauchee.barrier",
+      "priority": ["dnf", "flatpak"]
+    },
+    {
+      "id": "fragments",
+      "name": "Fragments",
+      "description": {
+        "es": "Cliente BitTorrent simple y moderno para GNOME.",
+        "en": "Simple and modern BitTorrent client for GNOME."
+      },
+      "flatpak_id": "org.gnome.Fragments",
+      "priority": ["flatpak"]
+    },
+    {
+      "id": "qbittorrent",
+      "name": "qBittorrent",
+      "description": {
+        "es": "Cliente BitTorrent libre, ligero y potente.",
+        "en": "Free, lightweight, and powerful BitTorrent client."
+      },
+      "dnf_pkg": "qbittorrent",
+      "flatpak_id": "org.qbittorrent.qBittorrent",
+      "priority": ["dnf", "flatpak"]
+    },
+    {
+      "id": "teamviewer",
+      "name": "TeamViewer",
+      "description": {
+        "es": "Control remoto y soporte tecnico a distancia.",
+        "en": "Remote control and distance technical support."
+      },
+      "dnf_pkg": "teamviewer",
+      "repo_func": "add_teamviewer_repo",
+      "priority": ["dnf"]
+    },
+    {
+      "id": "anydesk",
+      "name": "AnyDesk",
+      "description": {
+        "es": "Software de escritorio remoto rapido y seguro.",
+        "en": "Fast and secure remote desktop software."
+      },
+      "dnf_pkg": "anydesk",
+      "repo_func": "add_anydesk_repo",
+      "priority": ["dnf"]
+    },
+    {
+      "id": "rustdesk",
+      "name": "RustDesk",
+      "description": {
+        "es": "Infraestructura de escritorio remoto de codigo abierto.",
+        "en": "Open-source remote desktop infrastructure."
+      },
+      "flatpak_id": "com.rustdesk.RustDesk",
+      "priority": ["flatpak"]
+    },
+    {
+      "id": "ferdium",
+      "name": "Ferdium",
+      "description": {
+        "es": "Navegador de mensajeria todo-en-uno.",
+        "en": "All-in-one messaging browser."
+      },
+      "flatpak_id": "org.ferdium.Ferdium",
+      "priority": ["flatpak"]
+    }
+  ]
+}

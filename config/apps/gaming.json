@@ -1,0 +1,232 @@
+{
+  "id": "gaming",
+  "name": "Gaming y Creatividad",
+  "name_en": "Gaming and Creativity",
+  "apps": [
+    {
+      "id": "vlc",
+      "name": "VLC Player",
+      "description": {
+        "es": "El reproductor multimedia universal mas potente.",
+        "en": "The most powerful universal media player."
+      },
+      "dnf_pkg": "vlc",
+      "flatpak_id": "org.videolan.VLC",
+      "requires_repo": "rpm-fusion",
+      "priority": ["dnf", "flatpak"]
+    },
+    {
+      "id": "steam",
+      "name": "Steam",
+      "description": {
+        "es": "La plataforma de videojuegos mas grande disponible.",
+        "en": "The largest gaming platform available."
+      },
+      "dnf_pkg": "steam",
+      "flatpak_id": "com.valvesoftware.Steam",
+      "priority": ["dnf", "flatpak"]
+    },
+    {
+      "id": "lutris",
+      "name": "Lutris",
+      "description": {
+        "es": "Gestor de juegos todo-en-uno (Epic, GOG, Steam, etc.).",
+        "en": "All-in-one games manager (Epic, GOG, Steam, etc.)."
+      },
+      "dnf_pkg": "lutris",
+      "flatpak_id": "net.lutris.Lutris",
+      "priority": ["dnf", "flatpak"]
+    },
+    {
+      "id": "heroic",
+      "name": "Heroic Launcher",
+      "description": {
+        "es": "Cliente abierto para Epic Games, GOG y Amazon.",
+        "en": "Open client for Epic Games, GOG, and Amazon."
+      },
+      "flatpak_id": "com.heroicgameslauncher.hgl",
+      "priority": ["flatpak"]
+    },
+    {
+      "id": "retroarch",
+      "name": "RetroArch",
+      "description": {
+        "es": "Frontend para emuladores, motores de juegos y mas.",
+        "en": "Frontend for emulators, game engines, and more."
+      },
+      "flatpak_id": "org.libretro.RetroArch",
+      "priority": ["flatpak"]
+    },
+    {
+      "id": "mame",
+      "name": "MAME",
+      "description": {
+        "es": "Emulador de multiples maquinas arcade y sistemas.",
+        "en": "Multiple arcade machine and system emulator."
+      },
+      "dnf_pkg": "mame",
+      "flatpak_id": "org.mamedev.MAME",
+      "priority": ["dnf", "flatpak"]
+    },
+    {
+      "id": "gimp",
+      "name": "GIMP Editor",
+      "description": {
+        "es": "Editor de imagenes profesional y libre.",
+        "en": "Professional and free image editor."
+      },
+      "dnf_pkg": "gimp",
+      "flatpak_id": "org.gimp.GIMP",
+      "priority": ["dnf", "flatpak"]
+    },
+    {
+      "id": "photogimp",
+      "name": "PhotoGIMP",
+      "description": {
+        "es": "Parche estético para que GIMP luzca como Photoshop.",
+        "en": "Aesthetic patch to make GIMP look like Photoshop."
+      },
+      "custom_func": "install_photogimp",
+      "priority": ["custom"]
+    },
+    {
+      "id": "inkscape",
+      "name": "Inkscape",
+      "description": {
+        "es": "Herramienta de diseño vectorial profesional.",
+        "en": "Professional vector design tool."
+      },
+      "dnf_pkg": "inkscape",
+      "flatpak_id": "org.inkscape.Inkscape",
+      "priority": ["dnf", "flatpak"]
+    },
+    {
+      "id": "krita",
+      "name": "Krita",
+      "description": {
+        "es": "Programa de pintura digital profesional.",
+        "en": "Professional digital painting program."
+      },
+      "dnf_pkg": "krita",
+      "flatpak_id": "org.kde.krita",
+      "priority": ["dnf", "flatpak"]
+    },
+    {
+      "id": "blender",
+      "name": "Blender",
+      "description": {
+        "es": "Suite de creacion 3D completa y profesional.",
+        "en": "Complete and professional 3D creation suite."
+      },
+      "dnf_pkg": "blender",
+      "flatpak_id": "org.blender.Blender",
+      "priority": ["dnf", "flatpak"]
+    },
+    {
+      "id": "darktable",
+      "name": "Darktable",
+      "description": {
+        "es": "Flujo de trabajo y revelado fotografico RAW.",
+        "en": "RAW photographic workflow and development."
+      },
+      "dnf_pkg": "darktable",
+      "flatpak_id": "org.darktable.Darktable",
+      "priority": ["dnf", "flatpak"]
+    },
+    {
+      "id": "rawtherapee",
+      "name": "RawTherapee",
+      "description": {
+        "es": "Procesador de imagenes RAW de alta potencia.",
+        "en": "High-power RAW image processor."
+      },
+      "dnf_pkg": "rawtherapee",
+      "flatpak_id": "com.rawtherapee.RawTherapee",
+      "priority": ["dnf", "flatpak"]
+    },
+    {
+      "id": "obs-studio",
+      "name": "OBS Studio",
+      "description": {
+        "es": "Software para grabacion de video y transmision en vivo.",
+        "en": "Software for video recording and live streaming."
+      },
+      "dnf_pkg": "obs-studio",
+      "flatpak_id": "com.obsproject.Studio",
+      "priority": ["dnf", "flatpak"]
+    },
+    {
+      "id": "handbrake",
+      "name": "Handbrake",
+      "description": {
+        "es": "Conversor de video multiformato de codigo abierto.",
+        "en": "Open-source multi-format video converter."
+      },
+      "dnf_pkg": "handbrake",
+      "flatpak_id": "fr.handbrake.ghb",
+      "priority": ["dnf", "flatpak"]
+    },
+    {
+      "id": "audiotube",
+      "name": "AudioTube",
+      "description": {
+        "es": "Cliente de YouTube Music nativo para Linux.",
+        "en": "Native YouTube Music client for Linux."
+      },
+      "flatpak_id": "org.kde.audiotube",
+      "priority": ["flatpak"]
+    },
+    {
+      "id": "helvum",
+      "name": "Helvum",
+      "description": {
+        "es": "Patchbay grafico para Audio en PipeWire.",
+        "en": "Graphical patchbay for Audio in PipeWire."
+      },
+      "flatpak_id": "org.pipewire.Helvum",
+      "priority": ["flatpak"]
+    },
+    {
+      "id": "mediainfo",
+      "name": "MediaInfo GUI",
+      "description": {
+        "es": "Muestra informacion técnica de archivos multimedia.",
+        "en": "Shows technical information of media files."
+      },
+      "dnf_pkg": "mediainfo-gui",
+      "flatpak_id": "net.mediaarea.MediaInfo",
+      "priority": ["dnf", "flatpak"]
+    },
+    {
+      "id": "pixelorama",
+      "name": "Pixelorama",
+      "description": {
+        "es": "Editor de pixel art potente y gratuito.",
+        "en": "Powerful and free pixel art editor."
+      },
+      "flatpak_id": "com.orama_interactive.Pixelorama",
+      "priority": ["flatpak"]
+    },
+    {
+      "id": "tiled",
+      "name": "Tiled",
+      "description": {
+        "es": "Editor de mapas de azulejos flexible y facil de usar.",
+        "en": "Flexible and easy-to-use tile map editor."
+      },
+      "flatpak_id": "org.mapeditor.Tiled",
+      "priority": ["flatpak"]
+    },
+    {
+      "id": "librecad",
+      "name": "LibreCAD",
+      "description": {
+        "es": "Aplicacion de diseño asistido por computadora (CAD) 2D.",
+        "en": "2D Computer-Aided Design (CAD) application."
+      },
+      "dnf_pkg": "librecad",
+      "flatpak_id": "org.librecad.LibreCAD",
+      "priority": ["dnf", "flatpak"]
+    }
+  ]
+}

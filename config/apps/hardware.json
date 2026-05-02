@@ -1,0 +1,185 @@
+{
+  "id": "hardware",
+  "name": "Hardware y Sistema",
+  "name_en": "Hardware and System",
+  "apps": [
+    {
+      "id": "rpmfusion",
+      "name": "RPM Fusion",
+      "description": {
+        "es": "Repositorios esenciales para software no libre y codecs.",
+        "en": "Essential repositories for non-free software and codecs."
+      },
+      "custom_func": "add_rpm_fusion",
+      "priority": ["custom"]
+    },
+    {
+      "id": "nvidia",
+      "name": "Drivers NVIDIA",
+      "description": {
+        "es": "Drivers oficiales privativos para maximo rendimiento 3D.",
+        "en": "Official proprietary drivers for maximum 3D performance."
+      },
+      "dnf_pkg": "akmod-nvidia",
+      "requires_repo": "rpm-fusion",
+      "priority": ["dnf"],
+      "repair": "sudo dnf reinstall -y akmod-nvidia xorg-x11-drv-nvidia-cuda && sudo akmods --force"
+    },
+    {
+      "id": "tlp",
+      "name": "TLP Bateria",
+      "description": {
+        "es": "Optimizacion avanzada de energia para laptops.",
+        "en": "Advanced power optimization for laptops."
+      },
+      "dnf_pkg": "tlp",
+      "priority": ["dnf"],
+      "repair": "sudo systemctl enable --now tlp && sudo tlp start"
+    },
+    {
+      "id": "codecs",
+      "name": "Codecs Multimedia",
+      "description": {
+        "es": "Soporte para formatos propietarios (H.264, AAC, etc.).",
+        "en": "Support for proprietary formats (H.264, AAC, etc.)."
+      },
+      "custom_func": "install_codecs",
+      "priority": ["custom"],
+      "repair": "sudo dnf swap -y ffmpeg-free ffmpeg --allowerasing"
+    },
+    {
+      "id": "appimagelauncher",
+      "name": "AppImageLauncher",
+      "description": {
+        "es": "Integracion facil de archivos .AppImage en el sistema.",
+        "en": "Easy integration of .AppImage files into the system."
+      },
+      "dnf_pkg": "appimagelauncher",
+      "repo_func": "add_appimagelauncher_repo",
+      "priority": ["dnf"]
+    },
+    {
+      "id": "timeshift",
+      "name": "Timeshift Snapshots",
+      "description": {
+        "es": "Puntos de restauracion para revertir cambios del sistema.",
+        "en": "Restore points to revert system changes."
+      },
+      "dnf_pkg": "timeshift",
+      "priority": ["dnf"]
+    },
+    {
+      "id": "bleachbit",
+      "name": "BleachBit",
+      "description": {
+        "es": "Limpiador de sistema para liberar espacio y privacidad.",
+        "en": "System cleaner to free up space and privacy."
+      },
+      "dnf_pkg": "bleachbit",
+      "priority": ["dnf"]
+    },
+    {
+      "id": "flatseal",
+      "name": "Flatseal",
+      "description": {
+        "es": "Gestor de permisos para aplicaciones Flatpak.",
+        "en": "Permission manager for Flatpak applications."
+      },
+      "flatpak_id": "com.github.tchx84.Flatseal",
+      "priority": ["flatpak"]
+    },
+    {
+      "id": "fastfetch",
+      "name": "Fastfetch",
+      "description": {
+        "es": "Informacion del sistema rapida y estética en terminal.",
+        "en": "Fast and aesthetic system information in terminal."
+      },
+      "dnf_pkg": "fastfetch",
+      "priority": ["dnf"]
+    },
+    {
+      "id": "warehouse",
+      "name": "Warehouse",
+      "description": {
+        "es": "Gestor versátil de aplicaciones y datos Flatpak.",
+        "en": "Versatile manager for Flatpak applications and data."
+      },
+      "flatpak_id": "io.github.flattool.Warehouse",
+      "priority": ["flatpak"]
+    },
+    {
+      "id": "tailscale",
+      "name": "Tailscale",
+      "description": {
+        "es": "VPN Zero-config para conectar tus dispositivos.",
+        "en": "Zero-config VPN to connect your devices."
+      },
+      "dnf_pkg": "tailscale",
+      "repo_func": "add_tailscale_repo",
+      "custom_func": "install_tailscale_full",
+      "priority": ["custom"]
+    },
+    {
+      "id": "inxi",
+      "name": "inxi",
+      "description": {
+        "es": "Script de informacion de hardware para terminal.",
+        "en": "Hardware information script for terminal."
+      },
+      "dnf_pkg": "inxi",
+      "priority": ["dnf"]
+    },
+    {
+      "id": "stress-ng",
+      "name": "Stress-ng",
+      "description": {
+        "es": "Herramienta para pruebas de estres del sistema.",
+        "en": "System stress testing tool."
+      },
+      "dnf_pkg": "stress-ng",
+      "priority": ["dnf"]
+    },
+    {
+      "id": "openrgb",
+      "name": "OpenRGB",
+      "description": {
+        "es": "Control universal de iluminacion RGB.",
+        "en": "Universal RGB lighting control."
+      },
+      "flatpak_id": "org.openrgb.OpenRGB",
+      "priority": ["flatpak"]
+    },
+    {
+      "id": "waydroid",
+      "name": "Waydroid",
+      "description": {
+        "es": "Contenedor para ejecutar apps de Android en Linux.",
+        "en": "Container to run Android apps on Linux."
+      },
+      "dnf_pkg": "waydroid",
+      "custom_func": "install_waydroid_full",
+      "priority": ["custom"]
+    },
+    {
+      "id": "grub-customizer",
+      "name": "Grub Customizer",
+      "description": {
+        "es": "Interfaz grafica para configurar el menu de arranque.",
+        "en": "Graphical interface to configure the boot menu."
+      },
+      "dnf_pkg": "grub-customizer",
+      "priority": ["dnf"]
+    },
+    {
+      "id": "peazip",
+      "name": "PeaZip",
+      "description": {
+        "es": "Gestor de archivos comprimidos potente y libre.",
+        "en": "Powerful and free compressed file manager."
+      },
+      "flatpak_id": "io.github.peazip.PeaZip",
+      "priority": ["flatpak"]
+    }
+  ]
+}

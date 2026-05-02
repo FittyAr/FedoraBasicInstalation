@@ -6,14 +6,14 @@ is_installed() {
     local flatpak_id=$(get_app_data "$app_id" "flatpak_id")
 
     # Verificar DNF
-    if [ "$dnf_pkg" != "null" ]; then
+    if [ "$dnf_pkg" != "null" ] && [ -n "$dnf_pkg" ]; then
         if dnf list --installed "$dnf_pkg" &> /dev/null; then
             return 0
         fi
     fi
 
     # Verificar Flatpak
-    if [ "$flatpak_id" != "null" ]; then
+    if [ "$flatpak_id" != "null" ] && [ -n "$flatpak_id" ]; then
         if flatpak list --columns=application | grep -q "^$flatpak_id$"; then
             return 0
         fi
@@ -26,7 +26,7 @@ install_tiered() {
     local app_id=$1
     local priority=($(get_app_priority "$app_id"))
     
-    log_info "Procesando instalacion para: $app_id..."
+    log_info "$STR_INSTALLING_APP $app_id..."
 
     for method in "${priority[@]}"; do
         case "$method" in
@@ -36,11 +36,11 @@ install_tiered() {
                 local requires_repo=$(get_app_data "$app_id" "requires_repo")
                 
                 # Repositorios especiales
-                [ "$repo_func" != "null" ] && $repo_func
+                [ "$repo_func" != "null" ] && [ -n "$repo_func" ] && $repo_func
                 [ "$requires_repo" == "rpm-fusion" ] && add_rpm_fusion
                 
                 if sudo dnf install -y "$pkg"; then
-                    log_success "$app_id instalado via DNF."
+                    log_success "$app_id $STR_INSTALLED_VIA_DNF"
                     return 0
                 fi
                 ;;
@@ -48,13 +48,13 @@ install_tiered() {
                 local fid=$(get_app_data "$app_id" "flatpak_id")
                 sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
                 if sudo flatpak install -y flathub "$fid"; then
-                    log_success "$app_id instalado via Flatpak."
+                    log_success "$app_id $STR_INSTALLED_VIA_FLATPAK"
                     return 0
                 fi
                 ;;
             "custom")
                 local func=$(get_app_data "$app_id" "custom_func")
-                if [ "$func" != "null" ]; then
+                if [ "$func" != "null" ] && [ -n "$func" ]; then
                     $func
                     return 0
                 fi
@@ -62,6 +62,6 @@ install_tiered() {
         esac
     done
 
-    log_error "No se pudo instalar $app_id por ningun medio definido."
+    log_error "$STR_INSTALL_FAILED ($app_id)"
     return 1
 }
