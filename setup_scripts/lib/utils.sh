@@ -9,11 +9,14 @@ export MAGENTA='\033[0;35m'
 export CYAN='\033[0;36m'
 export NC='\033[0m'
 export DEBUG_MODE=false
-export PRESET_DIR="$(pwd)/presets"
-export LOG_DIR="$(pwd)/logs"
+export REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+export PRESET_DIR="$REPO_ROOT/presets"
+export LOG_DIR="$REPO_ROOT/logs"
 export SUMMARY_LOG="$LOG_DIR/summary.log"
+export PRESET_VERSION="1.0"
 
-# Iconos
+
+# Iconos (solo para terminal, no para whiptail)
 export CHECK="✔"
 export CROSS="✖"
 export INFO="ℹ"
@@ -76,8 +79,10 @@ declare -g -A INSTALLED_DNF
 declare -g -A INSTALLED_FLATPAK
 
 refresh_package_cache() {
-    INSTALLED_DNF=()
-    INSTALLED_FLATPAK=()
+    unset INSTALLED_DNF
+    declare -g -A INSTALLED_DNF
+    unset INSTALLED_FLATPAK
+    declare -g -A INSTALLED_FLATPAK
     
     # Cache DNF (solo nombres de paquetes)
     # Usamos dnf repoquery para mayor rapidez o awk sobre dnf list
@@ -97,4 +102,3 @@ refresh_package_cache() {
 check_dependencies
 DISTRO=$(check_distro)
 export DISTRO
-

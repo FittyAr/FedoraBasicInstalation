@@ -8,8 +8,6 @@ source "$BASE_DIR/lib/utils.sh"
 
 # --- PARSEAR ARGUMENTOS ---
 show_help() {
-    # Necesitamos cargar el idioma base para la ayuda si es posible
-    # Si no, usamos texto genérico o cargamos ES por defecto para la ayuda
     source "$BASE_DIR/locales/es.sh"
     echo -e "$STR_HELP_TEXT"
     exit 0
@@ -28,11 +26,18 @@ done
 
 # --- SELECCIÓN DE IDIOMA ---
 if [ -z "$LANG_CODE" ]; then
-    LANG_CHOICE=$(whiptail --title "Language / Idioma" --menu "Select Language / Seleccione el idioma" 15 60 2 \
+    tmp_lang=$(mktemp)
+    whiptail --title "Language / Idioma" --menu "Select Language / Seleccione el idioma" \
+        --nocancel \
+        15 60 2 \
         "es" "Español" \
-        "en" "English" 3>&1 1>&2 2>&3)
+        "en" "English" 2>"$tmp_lang"
 
-    if [ $? -ne 0 ]; then
+    exit_status=$?
+    LANG_CHOICE=$(cat "$tmp_lang")
+    rm -f "$tmp_lang"
+
+    if [ $exit_status -ne 0 ]; then
         exit 0
     fi
     export LANG_CODE="$LANG_CHOICE"
@@ -52,13 +57,14 @@ source "$BASE_DIR/lib/presets.sh"
 mkdir -p "$LOG_DIR"
 echo "--- Starting Session: $(date) ---" > "$SUMMARY_LOG"
 
-
 # Inicializar caches
-build_master_json
+if ! build_master_json; then
+    log_error "Fallo critico al construir la base de datos de aplicaciones."
+    exit 1
+fi
 refresh_package_cache
 
-
-# 1. OPTIMIZACIÓN DE DNF
+# 1. OPTIMIZACION DE DNF
 if [[ "$DISTRO" != "unknown" ]]; then
     log_info "$STR_OPTIMIZING_DNF"
     if ! grep -q "max_parallel_downloads" /etc/dnf/dnf.conf; then
@@ -66,72 +72,74 @@ if [[ "$DISTRO" != "unknown" ]]; then
     fi
 fi
 
-# 2. UI DINÁMICA
+# 2. UI DINAMICA
 declare -A SELECTED_STATE
-declare -A NAME_TO_ID_MAP
 declare -A CAT_NAME_MAP
 declare -A CAT_COUNTS
 
-
-# Detección dinámica de terminal
+# Deteccion dinamica de terminal
 TERM_COLS=$(tput cols 2>/dev/null || echo 80)
 TERM_LINES=$(tput lines 2>/dev/null || echo 24)
-WIDTH=$((TERM_COLS - 4)); [ $WIDTH -gt 120 ] && WIDTH=120
-[ $WIDTH -lt 80 ] && WIDTH=80
-HEIGHT=$((TERM_LINES - 4)); [ $HEIGHT -gt 30 ] && HEIGHT=30
-LIST_HEIGHT=$((HEIGHT - 10))
+
+# Asegurar que sean numeros
+[[ "$TERM_COLS" =~ ^[0-9]+$ ]] || TERM_COLS=80
+[[ "$TERM_LINES" =~ ^[0-9]+$ ]] || TERM_LINES=24
+
+WIDTH=$((TERM_COLS - 4))
+[ $WIDTH -gt 120 ] && WIDTH=120
+[ $WIDTH -lt 70 ] && WIDTH=70
+
+HEIGHT=$((TERM_LINES - 4))
+[ $HEIGHT -gt 35 ] && HEIGHT=35
+[ $HEIGHT -lt 20 ] && HEIGHT=20
+
+LIST_HEIGHT=$((HEIGHT - 12))
+[ $LIST_HEIGHT -lt 4 ] && LIST_HEIGHT=4
 
 init_apps_state() {
     while IFS="|" read -r cat_id cat_name; do
+        [ -z "$cat_id" ] && continue
         CAT_NAME_MAP["$cat_id"]="$cat_name"
         CAT_COUNTS["$cat_id"]=0
         while IFS="|" read -r app_id app_name app_desc; do
-            if is_installed "$app_id"; then
-                # Apps ya instaladas no cuentan como "seleccionadas para instalar" 
-                # pero podemos marcarlas si queremos. En el diseño actual, 
-                # SELECTED_STATE se usa para la checklist de whiptail.
-                SELECTED_STATE["$app_id"]="OFF"
-            else
-                SELECTED_STATE["$app_id"]="OFF"
-            fi
+            [ -z "$app_id" ] && continue
+            SELECTED_STATE["$app_id"]="OFF"
         done < <(get_apps_by_category "$cat_id")
     done < <(get_categories)
 }
-
 
 show_category_ui() {
     local cat_id=$1
     local cat_name=$2
     local args=()
-    
-    # Mapa temporal para esta ventana
     declare -A LOCAL_NAME_MAP
     
     while IFS="|" read -r app_id app_name app_desc; do
         local state="${SELECTED_STATE[$app_id]}"
         local display_name="$app_name"
-        
         if is_installed "$app_id"; then
             display_name="$STR_INSTALLED_TAG $app_name"
         fi
         
-        # Columna 1 (Tag): Nombre formateado
-        # Columna 2 (Item): Descripción
         args+=("$display_name" "$app_desc" "$state")
         LOCAL_NAME_MAP["$display_name"]="$app_id"
     done < <(get_apps_by_category "$cat_id")
 
-    local selected=$(whiptail --title "$cat_name" --checklist \
+    [ ${#args[@]} -eq 0 ] && return
+
+    local tmp_sel=$(mktemp)
+    whiptail --title "$cat_name" --checklist \
         "$STR_SELECTION_HINT" \
-        $HEIGHT $WIDTH $LIST_HEIGHT "${args[@]}" 3>&1 1>&2 2>&3)
+        --ok-button "$STR_OK" --cancel-button "$STR_CANCEL" \
+        $HEIGHT $WIDTH $LIST_HEIGHT "${args[@]}" 2>"$tmp_sel"
     
-    if [ $? -eq 0 ]; then
-        # Reset count for this category
+    local exit_status=$?
+    local selected=$(cat "$tmp_sel")
+    rm -f "$tmp_sel"
+
+    if [ $exit_status -eq 0 ]; then
         CAT_COUNTS["$cat_id"]=0
-        # Reset state for apps in this category
         while IFS="|" read -r aid rest; do SELECTED_STATE["$aid"]="OFF"; done < <(get_apps_by_category "$cat_id")
-        
-        # Iterar correctamente sobre la selección (maneja comillas y espacios)
         eval set -- "$selected"
         for name in "$@"; do
             local aid="${LOCAL_NAME_MAP["$name"]}"
@@ -143,12 +151,9 @@ show_category_ui() {
     fi
 }
 
-
 show_repair_menu() {
     local args=()
     while IFS="|" read -r rid rname; do args+=("$rid" "$rname"); done < <(get_global_repair_tools)
-    
-    # Agregar reparaciones individuales de apps instaladas
     for app_id in "${!SELECTED_STATE[@]}"; do
         if is_installed "$app_id"; then
             local r_cmd=$(get_app_data "$app_id" "repair")
@@ -159,51 +164,132 @@ show_repair_menu() {
         fi
     done
 
-    local choice=$(whiptail --title "$STR_REPAIRS_TITLE" --menu "$STR_REPAIRS_MENU" $HEIGHT $WIDTH $LIST_HEIGHT "${args[@]}" 3>&1 1>&2 2>&3)
-    [ $? -eq 0 ] && run_repair "$choice" "$choice"
+    [ ${#args[@]} -eq 0 ] && return
+
+    local tmp_choice=$(mktemp)
+    whiptail --title "$STR_REPAIRS_TITLE" --menu "$STR_REPAIRS_MENU" \
+        --ok-button "$STR_OK" --cancel-button "$STR_CANCEL" \
+        $HEIGHT $WIDTH $LIST_HEIGHT "${args[@]}" 2>"$tmp_choice"
+    
+    local exit_status=$?
+    local choice=$(cat "$tmp_choice")
+    rm -f "$tmp_choice"
+
+    [ $exit_status -eq 0 ] && run_repair "$choice" "$choice"
 }
 
 # Inicio
 log_info "$STR_ANALYZING_SYSTEM"
 init_apps_state
+log_info "Estado de aplicaciones inicializado."
 
-# Cargar preset si se pasó por parámetro
-if [ -n "$PRESET_FILE" ]; then
+if [ -z "$PRESET_FILE" ]; then
+    mkdir -p "$PRESET_DIR"
+    if ls "$PRESET_DIR"/*.json &>/dev/null; then
+        if whiptail --title "$STR_MENU_LOAD_PRESET" --yesno "$STR_STARTUP_LOAD_PRESET" \
+            --ok-button "$STR_ACCEPT" --cancel-button "$STR_CANCEL" 10 60; then
+            choose_preset_ui
+        fi
+    fi
+else
     load_preset "$PRESET_FILE"
 fi
 
+log_info "Entrando en el bucle principal..."
+
 while true; do
     menu_args=()
-    while IFS="|" read -r cid cname; do
-        count=${CAT_COUNTS[$cid]:-0}
-        menu_args+=("$cid" "$cname [$count]")
-    done < <(get_categories)
     
+    # Grupo: Software
+    # Removido encabezado decorativo para evitar conflictos de flags en whiptail
+    tmp_cats=$(mktemp)
+    get_categories > "$tmp_cats"
+    while IFS="|" read -r cid cname; do
+        [ -z "$cid" ] && continue
+        count=${CAT_COUNTS[$cid]:-0}
+        menu_args+=("$cid" "   $cname [$count]")
+    done < "$tmp_cats"
+    rm -f "$tmp_cats"
+    
+    # Grupo: Sistema
     menu_args+=(
         "SAVE_PRESET" "$STR_MENU_SAVE_PRESET"
         "LOAD_PRESET" "$STR_MENU_LOAD_PRESET"
-        "REPAIR" "$STR_MENU_REPAIR"
-        "INSTALL" "$STR_MENU_INSTALL"
-        "EXIT" "$STR_MENU_EXIT"
+        "REPAIR"      "$STR_MENU_REPAIR"
+        "INSTALL"     "$STR_MENU_INSTALL"
+        "EXIT"        "$STR_MENU_EXIT"
     )
 
     total_sel=0
-    for c in "${CAT_COUNTS[@]}"; do ((total_sel += c)); done
-    CHOICE=$(whiptail --title "$STR_MAIN_MENU_TITLE" --menu "$STR_SELECTED_COUNT $total_sel" $HEIGHT $WIDTH $LIST_HEIGHT "${menu_args[@]}" 3>&1 1>&2 2>&3)
+    for cid in "${!CAT_COUNTS[@]}"; do
+        ((total_sel += ${CAT_COUNTS[$cid]}))
+    done
+    
+    # Debug: Guardar menu_args para inspección
+    echo "Menu args (${#menu_args[@]}): ${menu_args[@]}" > /tmp/fedora_installer_debug.log
+    
+    if [ ${#menu_args[@]} -eq 0 ]; then
+        log_error "El menu de software esta vacio. Verifica los archivos en config/apps/"
+        exit 1
+    fi
+    
+    if [ $((${#menu_args[@]} % 2)) -ne 0 ]; then
+        log_error "Error interno: menu_args tiene un numero impar de elementos (${#menu_args[@]})"
+        exit 1
+    fi
 
+    tmp_choice="/tmp/fedora_installer_choice_$USER.txt"
+    # Usamos dimensiones fijas para descartar problemas de cálculo
+    whiptail --title "$STR_MAIN_MENU_TITLE" --menu "$STR_SELECTED_COUNT $total_sel" \
+        --ok-button "$STR_OK" --cancel-button "$STR_MENU_EXIT" \
+        $HEIGHT $WIDTH $LIST_HEIGHT "${menu_args[@]}" 2>"$tmp_choice"
+    
+    exit_status=$?
+    if [ -f "$tmp_choice" ]; then
+        CHOICE=$(cat "$tmp_choice")
+        rm -f "$tmp_choice"
+    else
+        CHOICE=""
+    fi
+
+    if [ $exit_status -ne 0 ] && [ $exit_status -ne 1 ]; then
+        if [ $exit_status -eq 255 ]; then
+            log_warn "Whiptail interrumpido (ESC)"
+            exit 0
+        else
+            log_error "Whiptail error: $exit_status"
+            log_info "Params: H=$HEIGHT W=$WIDTH LH=$LIST_HEIGHT"
+            log_info "Menu items: $((${#menu_args[@]} / 2))"
+            log_to_file "$SUMMARY_LOG" "Whiptail error: $exit_status. H=$HEIGHT W=$WIDTH LH=$LIST_HEIGHT"
+        fi
+        exit 1
+    fi
+
+    # Si el usuario pulsa Cancelar o la X, tratamos como EXIT
+    if [ $exit_status -eq 1 ]; then
+        CHOICE="EXIT"
+    elif [ -z "$CHOICE" ]; then
+        log_warn "Whiptail no retorno ninguna seleccion."
+        CHOICE="EXIT"
+    fi
 
     case "$CHOICE" in
         "INSTALL") break ;;
         "REPAIR") show_repair_menu ;;
         "SAVE_PRESET")
-            p_name=$(whiptail --title "$STR_MENU_SAVE_PRESET" --inputbox "$STR_ENTER_PRESET_NAME" 10 60 3>&1 1>&2 2>&3)
+            p_name=$(whiptail --title "$STR_MENU_SAVE_PRESET" --inputbox "$STR_ENTER_PRESET_NAME" \
+                --ok-button "$STR_OK" --cancel-button "$STR_CANCEL" \
+                10 60 3>&1 1>&2 2>&3)
             [ $? -eq 0 ] && save_preset "$p_name"
             ;;
         "LOAD_PRESET") choose_preset_ui ;;
-        "EXIT"|"") exit 0 ;;
+        "EXIT") exit 0 ;;
+        "HEAD_SOFT"|"HEAD_SYS") continue ;;
         *) 
             cat_n="${CAT_NAME_MAP[$CHOICE]}"
-            show_category_ui "$CHOICE" "$cat_n" 
+            if [ -n "$cat_n" ]; then
+                show_category_ui "$CHOICE" "$cat_n"
+            fi
             ;;
     esac
 done

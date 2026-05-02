@@ -11,7 +11,7 @@ export LANG_CODE="${LANG_CODE:-es}"
 
 
 # Archivo temporal para el JSON consolidado
-export MASTER_JSON_FILE="/tmp/fedora_installer_master.json"
+export MASTER_JSON_FILE="/tmp/fedora_installer_master_$USER.json"
 
 build_master_json() {
     # Combinar todos los archivos en uno solo para consultas rápidas
@@ -21,14 +21,20 @@ build_master_json() {
         local id=$(basename "$f" .json)
         jq --arg id "$id" '. + {id: $id}' "$f" > "$tmp_dir/$id.json"
     done
-    jq -s 'reduce .[] as $item ({}; .categories[$item.id] = $item)' "$tmp_dir/"*.json > "$MASTER_JSON_FILE"
+    jq -s 'reduce .[] as $item ({}; .categories[$item.id] = $item)' "$tmp_dir/"*.json > "$MASTER_JSON_FILE" 2>/tmp/jq_err.log
+    if [ $? -ne 0 ]; then
+        echo "Error building master JSON. Check /tmp/jq_err.log"
+        rm -rf "$tmp_dir"
+        return 1
+    fi
     rm -rf "$tmp_dir"
 }
 
 get_categories() {
+    [ ! -f "$MASTER_JSON_FILE" ] && return 1
     local name_field="name"
     [ "$LANG_CODE" != "es" ] && name_field="name_$LANG_CODE"
-    jq -r ".categories[] | \"\(.id)|\(.$name_field // .name)\"" "$MASTER_JSON_FILE"
+    jq -r ".categories[] | \"\(.id)|\(.$name_field // .name)\"" "$MASTER_JSON_FILE" 2>/dev/null
 }
 
 get_apps_by_category() {
