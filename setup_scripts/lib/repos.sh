@@ -1,10 +1,13 @@
 #!/bin/bash
 
 add_rpm_fusion() {
+    if rpm -q rpmfusion-free-release &>/dev/null; then
+        return 0
+    fi
     log_info "Añadiendo repositorios RPM Fusion (Free & Non-Free)..."
     sudo dnf install -y \
         https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
-        https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm || log_warn "Error al instalar RPM Fusion. Es posible que ya estén habilitados."
+        https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm || log_warn "Error al instalar RPM Fusion."
 }
 
 add_vscode_repo() {
@@ -27,6 +30,7 @@ add_edge_repo() {
 
 add_unity_repo() {
     log_info "Añadiendo repositorio de Unity Hub (Oficial)..."
+    sudo rpm --import https://hub.unity3d.com/linux/repos/rpm/stable/repodata/repomd.xml.key
     sudo tee /etc/yum.repos.d/unityhub.repo <<EOF
 [unityhub]
 name=Unity Hub
@@ -34,12 +38,13 @@ baseurl=https://hub.unity3d.com/linux/repos/rpm/stable
 enabled=1
 gpgcheck=1
 gpgkey=https://hub.unity3d.com/linux/repos/rpm/stable/repodata/repomd.xml.key
-repo_gpgcheck=1
+repo_gpgcheck=0
 EOF
 }
 
 add_google_chrome_repo() {
     log_info "Añadiendo repositorio de Google Chrome..."
+    sudo rpm --import https://dl.google.com/linux/linux_signing_key.pub
     sudo tee /etc/yum.repos.d/google-chrome.repo <<EOF
 [google-chrome]
 name=google-chrome
@@ -61,8 +66,8 @@ add_microsoft_repo() {
 
 add_github_desktop_repo() {
     log_info "Añadiendo repositorio de GitHub Desktop (Official RPM Feed)..."
-    sudo rpm --import https://rpm.packages.shiftkey.dev/gpg.key
-    sudo sh -c 'echo -e "[shiftkey-desktop]\nname=GitHub Desktop\nbaseurl=https://rpm.packages.shiftkey.dev/rpm/\nenabled=1\ngpgcheck=1\nrepo_gpgcheck=0\ngpgkey=https://rpm.packages.shiftkey.dev/gpg.key" > /etc/yum.repos.d/shiftkey-desktop.repo'
+    sudo rpm --import https://rpm.shiftkey.dev/gpg.key
+    sudo sh -c 'echo -e "[shiftkey-desktop]\nname=GitHub Desktop\nbaseurl=https://rpm.shiftkey.dev/rpm/\nenabled=1\ngpgcheck=1\nrepo_gpgcheck=0\ngpgkey=https://rpm.shiftkey.dev/gpg.key" > /etc/yum.repos.d/shiftkey-desktop.repo'
 }
 
 add_docker_repo() {
@@ -90,36 +95,30 @@ add_tailscale_repo() {
     sudo dnf config-manager addrepo --from-repofile=https://pkgs.tailscale.com/stable/fedora/tailscale.repo
 }
 
-add_lazydocker_repo() {
-    if confirm_copr "atim/lazydocker"; then
-        log_info "Añadiendo repositorio de LazyDocker (COPR)..."
-        sudo dnf copr enable -y atim/lazydocker
-    else
-        return 1
-    fi
-}
 
 add_teamviewer_repo() {
     log_info "Añadiendo repositorio de TeamViewer (Oficial)..."
+    sudo rpm --import https://linux.teamviewer.com/pubkey/TeamViewer2017.asc
     sudo tee /etc/yum.repos.d/teamviewer.repo <<EOF
 [teamviewer]
 name=TeamViewer - stable
 baseurl=https://linux.teamviewer.com/yum/stable/main/binary-\$basearch/
 enabled=1
 gpgcheck=1
-repo_gpgcheck=1
+repo_gpgcheck=0
 gpgkey=https://linux.teamviewer.com/pubkey/TeamViewer2017.asc
 EOF
 }
 
 add_anydesk_repo() {
     log_info "Añadiendo repositorio de AnyDesk..."
+    sudo rpm --import https://keys.anydesk.com/repos/RPM-GPG-KEY
     sudo tee /etc/yum.repos.d/AnyDesk-Fedora.repo <<EOF
 [anydesk]
 name=AnyDesk Fedora - stable
 baseurl=http://rpm.anydesk.com/fedora/\$basearch/
 gpgcheck=1
-repo_gpgcheck=1
+repo_gpgcheck=0
 gpgkey=https://keys.anydesk.com/repos/RPM-GPG-KEY
 EOF
 }

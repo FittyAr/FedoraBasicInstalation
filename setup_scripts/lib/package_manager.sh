@@ -49,12 +49,20 @@ install_tiered() {
                 
                 # Repositorios especiales
                 if [ "$repo_func" != "null" ] && [ -n "$repo_func" ]; then
+                    local repo_status=0
                     if [ "$DEBUG_MODE" = true ]; then
-                        $repo_func &>> "$log_file" || continue
+                        $repo_func &>> "$log_file" || repo_status=1
                     else
-                        $repo_func || continue
+                        $repo_func || repo_status=1
+                    fi
+                    
+                    if [ $repo_status -eq 0 ]; then
+                        sudo dnf makecache --quiet
+                    else
+                        continue
                     fi
                 fi
+
                 
                 if [ "$requires_repo" == "rpm-fusion" ]; then
                     if [ "$DEBUG_MODE" = true ]; then

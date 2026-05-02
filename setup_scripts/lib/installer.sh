@@ -14,7 +14,6 @@ declare -A REPO_MAPPING=(
     ["vscodium"]="add_vscodium_repo"
     ["warp-terminal"]="add_warp_repo"
     ["tailscale"]="add_tailscale_repo"
-    ["lazydocker"]="add_lazydocker_repo"
     ["anydesk"]="add_anydesk_repo"
     ["teamviewer"]="add_teamviewer_repo"
 )
@@ -102,3 +101,7 @@ setup_antigravity() {
     log_success "Antigravity Agent listo para operar."
 }
 
+install_lazydocker_custom() {
+    log_info "Instalando LazyDocker mediante script oficial..."
+    curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
+}

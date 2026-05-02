@@ -138,10 +138,9 @@
         "es": "Interfaz de terminal para Docker y Docker Compose.",
         "en": "Terminal interface for Docker and Docker Compose."
       },
-      "dnf_pkg": "lazydocker",
-      "repo_func": "add_lazydocker_repo",
+      "custom_func": "install_lazydocker_custom",
       "priority": [
-        "dnf"
+        "custom"
       ]
     },
     {

@@ -58,6 +58,21 @@ source "$BASE_DIR/lib/presets.sh"
 mkdir -p "$LOG_DIR"
 echo "--- Starting Session: $(date) ---" > "$SUMMARY_LOG"
 
+# EMERGENCIA: Corregir repositorios rotos de sesiones previas que impiden ejecutar DNF
+log_info "Verificando integridad de repositorios..."
+if [ -f "/etc/yum.repos.d/vscodium.repo" ]; then
+    sudo sed -i 's/\[ vscodium \]/\[vscodium\]/g' /etc/yum.repos.d/vscodium.repo
+fi
+if [ -f "/etc/yum.repos.d/ vscodium .repo" ]; then
+    sudo rm -f "/etc/yum.repos.d/ vscodium .repo"
+fi
+# Limpiar repositorios para forzar regeneración limpia y evitar errores de GPG
+sudo rm -f /etc/yum.repos.d/shiftkey-desktop.repo /etc/yum.repos.d/unityhub.repo /etc/yum.repos.d/teamviewer.repo /etc/yum.repos.d/AnyDesk-Fedora.repo
+
+# Sincronizar metadatos y aceptar llaves GPG de repositorios existentes automáticamente
+log_info "Sincronizando repositorios y aceptando llaves GPG..."
+sudo dnf makecache -y
+
 # Inicializar caches
 if ! build_master_json; then
     log_error "Fallo critico al construir la base de datos de aplicaciones."
@@ -241,9 +256,20 @@ while true; do
     fi
 
     tmp_choice=$(mktemp)
-    whiptail --title "$STR_MAIN_MENU_TITLE - $STR_SELECTED_COUNT $total_sel" --menu "$STR_SELECTION_HINT" \
+    if [ "$DEBUG_MODE" = true ]; then
+        log_info "DEBUG: Whiptail command: whiptail --title \"$STR_MAIN_MENU_TITLE\" --menu \"$STR_SELECTION_HINT\" $HEIGHT $WIDTH $LIST_HEIGHT ${menu_args[*]}"
+    fi
+
+    # Forzar whiptail a usar el terminal si el modo debug está activo
+    local wt_cmd=(whiptail --title "$STR_MAIN_MENU_TITLE - $STR_SELECTED_COUNT $total_sel" --menu "$STR_SELECTION_HINT" \
         --ok-button "$STR_OK" --cancel-button "$STR_MENU_EXIT" \
-        $HEIGHT $WIDTH $LIST_HEIGHT "${menu_args[@]}" 2>"$tmp_choice"
+        $HEIGHT $WIDTH $LIST_HEIGHT "${menu_args[@]}")
+    
+    if [ "$DEBUG_MODE" = true ]; then
+        "${wt_cmd[@]}" 2>"$tmp_choice"
+    else
+        "${wt_cmd[@]}" 2>"$tmp_choice"
+    fi
     
     exit_status=$?
     if [ -f "$tmp_choice" ]; then

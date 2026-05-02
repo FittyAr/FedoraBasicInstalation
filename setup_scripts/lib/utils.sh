@@ -100,4 +100,21 @@ refresh_package_cache() {
 # Inicializar entorno
 check_dependencies
 DISTRO=$(check_distro)
-export DISTRO
+
+confirm_copr() {
+    local repo=$1
+    if [ "$NON_INTERACTIVE" = true ]; then
+        return 0
+    fi
+    local msg=$(printf "${STR_COPR_CONFIRM_MSG:-Se requiere el repositorio COPR %s. ¿Proceder?}" "$repo")
+    echo -e "${YELLOW}${WARN} $msg${NC}"
+    echo -ne "${CYAN}¿Desea proceder? (s/n): ${NC}"
+    read -r response < /dev/tty
+    if [[ "$response" =~ ^[sSyY]$ ]]; then
+        return 0
+    else
+        log_warn "Omitiendo repositorio COPR: $repo"
+        return 1
+    fi
+}
+export -f confirm_copr
