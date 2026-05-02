@@ -27,10 +27,11 @@ done
 # --- SELECCIÓN DE IDIOMA ---
 if [ -z "$LANG_CODE" ]; then
     tmp_lang=$(mktemp)
-    whiptail --title "Language / Idioma" --menu "Select Language / Seleccione el idioma" \
+    whiptail --title "🌐 Language / Idioma" --menu \
+        "Select Language / Seleccione el idioma\n  ──────────────────────────────" \
         --nocancel \
         15 60 2 \
-        "es" "Español" \
+        "es" "Espanol" \
         "en" "English" 2>"$tmp_lang"
 
     exit_status=$?
@@ -128,8 +129,9 @@ show_category_ui() {
     [ ${#args[@]} -eq 0 ] && return
 
     local tmp_sel=$(mktemp)
+    local cat_desc="  $STR_SELECTION_HINT\n  ──────────────────────────────"
     whiptail --title "$cat_name" --checklist \
-        "$STR_SELECTION_HINT" \
+        "$cat_desc" \
         --ok-button "$STR_OK" --cancel-button "$STR_CANCEL" \
         $HEIGHT $WIDTH $LIST_HEIGHT "${args[@]}" 2>"$tmp_sel"
     
@@ -167,7 +169,8 @@ show_repair_menu() {
     [ ${#args[@]} -eq 0 ] && return
 
     local tmp_choice=$(mktemp)
-    whiptail --title "$STR_REPAIRS_TITLE" --menu "$STR_REPAIRS_MENU" \
+    local r_desc="  $STR_REPAIRS_MENU\n  ──────────────────────────────"
+    whiptail --title "$STR_REPAIRS_TITLE" --menu "$r_desc" \
         --ok-button "$STR_OK" --cancel-button "$STR_CANCEL" \
         $HEIGHT $WIDTH $LIST_HEIGHT "${args[@]}" 2>"$tmp_choice"
     
@@ -201,13 +204,12 @@ while true; do
     menu_args=()
     
     # Grupo: Software
-    # Removido encabezado decorativo para evitar conflictos de flags en whiptail
     tmp_cats=$(mktemp)
     get_categories > "$tmp_cats"
     while IFS="|" read -r cid cname; do
         [ -z "$cid" ] && continue
         count=${CAT_COUNTS[$cid]:-0}
-        menu_args+=("$cid" "   $cname [$count]")
+        menu_args+=("$cid" "$cname ($count)")
     done < "$tmp_cats"
     rm -f "$tmp_cats"
     
@@ -238,9 +240,8 @@ while true; do
         exit 1
     fi
 
-    tmp_choice="/tmp/fedora_installer_choice_$USER.txt"
-    # Usamos dimensiones fijas para descartar problemas de cálculo
-    whiptail --title "$STR_MAIN_MENU_TITLE" --menu "$STR_SELECTED_COUNT $total_sel" \
+    tmp_choice=$(mktemp)
+    whiptail --title "$STR_MAIN_MENU_TITLE - $STR_SELECTED_COUNT $total_sel" --menu "$STR_SELECTION_HINT" \
         --ok-button "$STR_OK" --cancel-button "$STR_MENU_EXIT" \
         $HEIGHT $WIDTH $LIST_HEIGHT "${menu_args[@]}" 2>"$tmp_choice"
     

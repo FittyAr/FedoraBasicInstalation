@@ -107,7 +107,8 @@ choose_preset_ui() {
         args+=("$(basename "$f")" "")
     done
     
-    local choice=$(whiptail --title "$STR_SELECT_PRESET" --menu "$STR_SELECT_PRESET" \
+    local p_desc="  $STR_SELECT_PRESET\n  ──────────────────────────────"
+    local choice=$(whiptail --title "$STR_MENU_LOAD_PRESET" --menu "$p_desc" \
         --ok-button "$STR_OK" --cancel-button "$STR_CANCEL" \
         $HEIGHT $WIDTH $LIST_HEIGHT "${args[@]}" 3>&1 1>&2 2>&3)
     
