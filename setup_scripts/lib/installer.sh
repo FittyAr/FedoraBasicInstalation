@@ -105,8 +105,3 @@ install_lazydocker_custom() {
     curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
 }
 
-install_appimagelauncher_custom() {
-    log_info "Instalando AppImageLauncher desde GitHub Releases..."
-    local rpm_url="https://github.com/TheAssassin/AppImageLauncher/releases/download/v2.2.0/appimagelauncher-2.2.0-8fd5854.x86_64.rpm"
-    sudo dnf install -y "$rpm_url"
-}

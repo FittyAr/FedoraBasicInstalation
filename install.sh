@@ -67,7 +67,7 @@ if [ -f "/etc/yum.repos.d/ vscodium .repo" ]; then
     sudo rm -f "/etc/yum.repos.d/ vscodium .repo"
 fi
 # Limpiar repositorios para forzar regeneración limpia y evitar errores de GPG
-sudo rm -f /etc/yum.repos.d/shiftkey-desktop.repo /etc/yum.repos.d/unityhub.repo /etc/yum.repos.d/teamviewer.repo /etc/yum.repos.d/AnyDesk-Fedora.repo /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:langdon:appimagelauncher.repo
+sudo rm -f /etc/yum.repos.d/shiftkey-desktop.repo /etc/yum.repos.d/unityhub.repo /etc/yum.repos.d/teamviewer.repo /etc/yum.repos.d/AnyDesk-Fedora.repo
 
 # Sincronizar metadatos y aceptar llaves GPG de repositorios existentes automáticamente
 log_info "Sincronizando repositorios y aceptando llaves GPG..."

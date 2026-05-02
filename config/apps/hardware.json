@@ -48,16 +48,6 @@
       "repair": "sudo dnf swap -y ffmpeg-free ffmpeg --allowerasing"
     },
     {
-      "id": "appimagelauncher",
-      "name": "AppImageLauncher",
-      "description": {
-        "es": "Integracion facil de archivos .AppImage en el sistema.",
-        "en": "Easy integration of .AppImage files into the system."
-      },
-      "custom_func": "install_appimagelauncher_custom",
-      "priority": ["custom"]
-    },
-    {
       "id": "timeshift",
       "name": "Timeshift Snapshots",
       "description": {

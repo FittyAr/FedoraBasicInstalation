@@ -83,14 +83,6 @@ add_docker_repo() {
     sudo dnf config-manager addrepo --from-repofile=https://download.docker.com/linux/fedora/docker-ce.repo
 }
 
-add_appimagelauncher_repo() {
-    if confirm_copr "atim/appimagelauncher"; then
-        log_info "Añadiendo repositorio de AppImageLauncher (COPR)..."
-        sudo dnf copr enable -y atim/appimagelauncher
-    else
-        return 1
-    fi
-}
 
 add_warp_repo() {
     log_info "Añadiendo repositorio de Warp Terminal..."
