@@ -14,16 +14,11 @@ declare -A REPO_MAPPING=(
     ["vscodium"]="add_vscodium_repo"
     ["warp-terminal"]="add_warp_repo"
     ["tailscale"]="add_tailscale_repo"
-    ["lazydocker"]="add_lazydocker_repo",
-    ["anydesk"]="add_anydesk_repo",
+    ["lazydocker"]="add_lazydocker_repo"
+    ["anydesk"]="add_anydesk_repo"
     ["teamviewer"]="add_teamviewer_repo"
 )
 
-add_vscodium_repo() {
-    log_info "Añadiendo repositorio de VSCodium..."
-    sudo rpm --import https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/-/raw/master/pub.gpg
-    sudo sh -c 'echo -e "[ vscodium ]\nname=vscodium\nbaseurl=https://download.vscodium.com/rpms/\nenabled=1\ngpgcheck=1\ngpgkey=https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/-/raw/master/pub.gpg" > /etc/yum.repos.d/vscodium.repo'
-}
 
 install_docker_full() {
     log_info "Instalando Docker Engine & Docker Desktop components..."

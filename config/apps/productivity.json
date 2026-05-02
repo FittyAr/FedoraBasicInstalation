@@ -86,7 +86,7 @@
         "es": "Gestiona y organiza tus AppImages facilmente.",
         "en": "Manage and organize your AppImages easily."
       },
-      "flatpak_id": "it.miurelli.gearlever",
+      "flatpak_id": "it.mijorus.gearlever",
       "priority": [
         "flatpak"
       ]
@@ -134,7 +134,7 @@
         "es": "Interfaz grafica para gestionar tus nubes con Rclone.",
         "en": "Graphical interface to manage your clouds with Rclone."
       },
-      "flatpak_id": "io.github.kapitainsky.RcloneBrowser",
+      "flatpak_id": "com.rcloneui.RcloneUI",
       "priority": [
         "flatpak"
       ]

@@ -10,6 +10,9 @@ Este archivo define las reglas y el contexto para que los agentes de IA (como An
 4.  **Logging Estándar**: Usa las funciones `log_info`, `log_warn`, `log_success` y `log_error` para mantener al usuario informado.
 5.  **Seguridad de Sudo**: El script está diseñado para ejecutarse sin privilegios de root inicialmente y pedir sudo solo cuando sea necesario. No asumas persistencia de sudo.
 6.  **Validación de Instalación**: Siempre verifica si una herramienta ya existe antes de intentar una instalación "custom".
+7.  **Prioridad DNF**: Siempre da prioridad a la instalación vía DNF sobre Flatpak.
+8.  **Repositorios Oficiales**: Busca y utiliza los repositorios oficiales de cada proyecto navegando a sus páginas de documentación.
+9.  **Confirmación de COPR**: Para aplicaciones que requieran el uso de repositorios COPR, el script debe pedir confirmación explícita al usuario antes de proceder.
 
 ## Contexto del Proyecto
 

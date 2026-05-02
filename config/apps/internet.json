@@ -55,7 +55,7 @@
         "es": "Cliente de escritorio para YouTube Music.",
         "en": "Desktop client for YouTube Music."
       },
-      "flatpak_id": "it.thub.YouTubeMusic",
+      "flatpak_id": "app.ytmdesktop.ytmdesktop",
       "priority": ["flatpak"]
     },
     {
@@ -118,7 +118,7 @@
         "es": "Cliente BitTorrent simple y moderno para GNOME.",
         "en": "Simple and modern BitTorrent client for GNOME."
       },
-      "flatpak_id": "org.gnome.Fragments",
+      "flatpak_id": "de.haeckerfelix.Fragments",
       "priority": ["flatpak"]
     },
     {

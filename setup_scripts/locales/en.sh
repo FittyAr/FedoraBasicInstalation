@@ -42,4 +42,6 @@ export STR_STARTUP_LOAD_PRESET="Existing presets detected. Load one now?"
 export STR_INCOMPATIBLE_PRESET="Warning: Incompatible or incomplete preset."
 export STR_APPS_NOT_FOUND="Not found:"
 export STR_MENU_SECTION_SOFTWARE="--- SOFTWARE CATEGORIES ---"
-export STR_MENU_SECTION_SYSTEM="--- SYSTEM ACTIONS ---"
+
+export STR_COPR_CONFIRM_TITLE="Third-Party Repository (COPR)"
+export STR_COPR_CONFIRM_MSG="Enabling the COPR repository '%s' is required. Do you want to proceed?"

@@ -42,4 +42,6 @@ export STR_STARTUP_LOAD_PRESET="Desea cargar un preset existente?"
 export STR_INCOMPATIBLE_PRESET="Aviso: Preset incompatible o incompleto."
 export STR_APPS_NOT_FOUND="No encontradas:"
 export STR_MENU_SECTION_SOFTWARE="--- CATEGORIAS DE SOFTWARE ---"
-export STR_MENU_SECTION_SYSTEM="--- ACCIONES DEL SISTEMA ---"
+
+export STR_COPR_CONFIRM_TITLE="Repositorio de Terceros (COPR)"
+export STR_COPR_CONFIRM_MSG="Se requiere habilitar el repositorio COPR '%s'. ¿Desea proceder?"

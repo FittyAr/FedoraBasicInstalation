@@ -4,7 +4,7 @@ add_rpm_fusion() {
     log_info "Añadiendo repositorios RPM Fusion (Free & Non-Free)..."
     sudo dnf install -y \
         https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
-        https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+        https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm || log_warn "Error al instalar RPM Fusion. Es posible que ya estén habilitados."
 }
 
 add_vscode_repo() {
@@ -26,14 +26,28 @@ add_edge_repo() {
 }
 
 add_unity_repo() {
-    log_info "Añadiendo repositorio de Unity Hub..."
-    sudo sh -c 'echo -e "[unityhub]\nname=Unity Hub\nbaseurl=https://hub.unity3d.com/linux/repos/rpm\nenabled=1\ngpgcheck=1\ngpgkey=https://hub.unity3d.com/linux/repos/rpm/repodata/repomd.xml.key" > /etc/yum.repos.d/unityhub.repo'
+    log_info "Añadiendo repositorio de Unity Hub (Oficial)..."
+    sudo tee /etc/yum.repos.d/unityhub.repo <<EOF
+[unityhub]
+name=Unity Hub
+baseurl=https://hub.unity3d.com/linux/repos/rpm/stable
+enabled=1
+gpgcheck=1
+gpgkey=https://hub.unity3d.com/linux/repos/rpm/stable/repodata/repomd.xml.key
+repo_gpgcheck=1
+EOF
 }
 
 add_google_chrome_repo() {
     log_info "Añadiendo repositorio de Google Chrome..."
-    # Chrome doesn't provide a .repo file directly via URL usually, we use the baseurl format or skip if already there
-    sudo dnf config-manager addrepo --name=google-chrome --baseurl=http://dl.google.com/linux/chrome/rpm/stable/x86_64
+    sudo tee /etc/yum.repos.d/google-chrome.repo <<EOF
+[google-chrome]
+name=google-chrome
+baseurl=http://dl.google.com/linux/chrome/rpm/stable/x86_64
+enabled=1
+gpgcheck=1
+gpgkey=https://dl.google.com/linux/linux_signing_key.pub
+EOF
 }
 
 add_microsoft_repo() {
@@ -46,8 +60,9 @@ add_microsoft_repo() {
 }
 
 add_github_desktop_repo() {
-    log_info "Añadiendo repositorio de GitHub Desktop (COPR)..."
-    sudo dnf copr enable -y shiftkey/desktop
+    log_info "Añadiendo repositorio de GitHub Desktop (Official RPM Feed)..."
+    sudo rpm --import https://rpm.packages.shiftkey.dev/gpg.key
+    sudo sh -c 'echo -e "[shiftkey-desktop]\nname=GitHub Desktop\nbaseurl=https://rpm.packages.shiftkey.dev/rpm/\nenabled=1\ngpgcheck=1\nrepo_gpgcheck=0\ngpgkey=https://rpm.packages.shiftkey.dev/gpg.key" > /etc/yum.repos.d/shiftkey-desktop.repo'
 }
 
 add_docker_repo() {
@@ -56,8 +71,12 @@ add_docker_repo() {
 }
 
 add_appimagelauncher_repo() {
-    log_info "Añadiendo repositorio de AppImageLauncher (COPR)..."
-    sudo dnf copr enable -y allexj/AppImageLauncher
+    if confirm_copr "langdon/appimagelauncher"; then
+        log_info "Añadiendo repositorio de AppImageLauncher (COPR)..."
+        sudo dnf copr enable -y langdon/appimagelauncher
+    else
+        return 1
+    fi
 }
 
 add_warp_repo() {
@@ -72,14 +91,25 @@ add_tailscale_repo() {
 }
 
 add_lazydocker_repo() {
-    log_info "Añadiendo repositorio de LazyDocker (COPR)..."
-    sudo dnf copr enable -y atim/lazydocker
+    if confirm_copr "atim/lazydocker"; then
+        log_info "Añadiendo repositorio de LazyDocker (COPR)..."
+        sudo dnf copr enable -y atim/lazydocker
+    else
+        return 1
+    fi
 }
 
 add_teamviewer_repo() {
-    log_info "Añadiendo repositorio de TeamViewer..."
-    sudo dnf config-manager addrepo --from-repofile=https://linux.teamviewer.com/yum/stable/main/binary-x86_64/teamviewer.repo
-    sudo rpm --import https://linux.teamviewer.com/pubkey/TeamViewer2017.asc
+    log_info "Añadiendo repositorio de TeamViewer (Oficial)..."
+    sudo tee /etc/yum.repos.d/teamviewer.repo <<EOF
+[teamviewer]
+name=TeamViewer - stable
+baseurl=https://linux.teamviewer.com/yum/stable/main/binary-\$basearch/
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://linux.teamviewer.com/pubkey/TeamViewer2017.asc
+EOF
 }
 
 add_anydesk_repo() {
@@ -94,3 +124,9 @@ gpgkey=https://keys.anydesk.com/repos/RPM-GPG-KEY
 EOF
 }
 
+add_vscodium_repo() {
+    log_info "Añadiendo repositorio de VSCodium..."
+    sudo rm -f "/etc/yum.repos.d/ vscodium .repo"
+    sudo rpm --import https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/-/raw/master/pub.gpg
+    sudo sh -c 'echo -e "[vscodium]\nname=vscodium\nbaseurl=https://download.vscodium.com/rpms/\nenabled=1\ngpgcheck=1\ngpgkey=https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/-/raw/master/pub.gpg" > /etc/yum.repos.d/vscodium.repo'
+}

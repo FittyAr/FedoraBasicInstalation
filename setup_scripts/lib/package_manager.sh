@@ -50,9 +50,9 @@ install_tiered() {
                 # Repositorios especiales
                 if [ "$repo_func" != "null" ] && [ -n "$repo_func" ]; then
                     if [ "$DEBUG_MODE" = true ]; then
-                        $repo_func &>> "$log_file"
+                        $repo_func &>> "$log_file" || continue
                     else
-                        $repo_func
+                        $repo_func || continue
                     fi
                 fi
                 

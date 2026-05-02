@@ -225,8 +225,7 @@
         "en": "2D Computer-Aided Design (CAD) application."
       },
       "dnf_pkg": "librecad",
-      "flatpak_id": "org.librecad.LibreCAD",
-      "priority": ["dnf", "flatpak"]
+      "priority": ["dnf"]
     }
   ]
 }

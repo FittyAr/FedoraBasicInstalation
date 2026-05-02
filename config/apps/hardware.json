@@ -161,16 +161,7 @@
       "custom_func": "install_waydroid_full",
       "priority": ["custom"]
     },
-    {
-      "id": "grub-customizer",
-      "name": "Grub Customizer",
-      "description": {
-        "es": "Interfaz grafica para configurar el menu de arranque.",
-        "en": "Graphical interface to configure the boot menu."
-      },
-      "dnf_pkg": "grub-customizer",
-      "priority": ["dnf"]
-    },
+
     {
       "id": "peazip",
       "name": "PeaZip",

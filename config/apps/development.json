@@ -11,7 +11,9 @@
         "en": "Distributed version control system."
       },
       "dnf_pkg": "git",
-      "priority": ["dnf"]
+      "priority": [
+        "dnf"
+      ]
     },
     {
       "id": "code",
@@ -23,7 +25,10 @@
       "dnf_pkg": "code",
       "repo_func": "add_vscode_repo",
       "flatpak_id": "com.visualstudio.code",
-      "priority": ["dnf", "flatpak"]
+      "priority": [
+        "dnf",
+        "flatpak"
+      ]
     },
     {
       "id": "vscodium",
@@ -35,7 +40,10 @@
       "dnf_pkg": "vscodium",
       "repo_func": "add_vscodium_repo",
       "flatpak_id": "com.vscodium.codium",
-      "priority": ["dnf", "flatpak"]
+      "priority": [
+        "dnf",
+        "flatpak"
+      ]
     },
     {
       "id": "zed",
@@ -45,7 +53,9 @@
         "en": "High-performance code editor written in Rust."
       },
       "flatpak_id": "dev.zed.Zed",
-      "priority": ["flatpak"]
+      "priority": [
+        "flatpak"
+      ]
     },
     {
       "id": "cursor",
@@ -55,7 +65,9 @@
         "en": "Code editor optimized for programming with AI."
       },
       "custom_func": "install_cursor",
-      "priority": ["custom"]
+      "priority": [
+        "custom"
+      ]
     },
     {
       "id": "ollama",
@@ -65,7 +77,9 @@
         "en": "Local server for LLMs (Llama 3, Phi, etc.)."
       },
       "custom_func": "install_ollama",
-      "priority": ["custom"],
+      "priority": [
+        "custom"
+      ],
       "repair": "sudo systemctl restart ollama"
     },
     {
@@ -75,9 +89,11 @@
         "es": "Interfaz grafica intuitiva para gestionar Git y GitHub.",
         "en": "Intuitive graphical interface to manage Git and GitHub."
       },
-      "dnf_pkg": "GitHubDesktop",
+      "dnf_pkg": "github-desktop",
       "repo_func": "add_github_desktop_repo",
-      "priority": ["dnf"]
+      "priority": [
+        "dnf"
+      ]
     },
     {
       "id": "distrobox",
@@ -87,7 +103,9 @@
         "en": "Use any Linux distribution inside your terminal."
       },
       "dnf_pkg": "distrobox",
-      "priority": ["dnf"]
+      "priority": [
+        "dnf"
+      ]
     },
     {
       "id": "podman-desktop",
@@ -97,7 +115,9 @@
         "en": "Interface to manage containers with Podman."
       },
       "flatpak_id": "io.podman_desktop.PodmanDesktop",
-      "priority": ["flatpak"]
+      "priority": [
+        "flatpak"
+      ]
     },
     {
       "id": "dbeaver",
@@ -107,7 +127,9 @@
         "en": "Universal and free database manager."
       },
       "flatpak_id": "io.dbeaver.DBeaverCommunity",
-      "priority": ["flatpak"]
+      "priority": [
+        "flatpak"
+      ]
     },
     {
       "id": "lazydocker",
@@ -118,7 +140,9 @@
       },
       "dnf_pkg": "lazydocker",
       "repo_func": "add_lazydocker_repo",
-      "priority": ["dnf"]
+      "priority": [
+        "dnf"
+      ]
     },
     {
       "id": "warp-terminal",
@@ -129,7 +153,9 @@
       },
       "dnf_pkg": "warp-terminal",
       "repo_func": "add_warp_repo",
-      "priority": ["dnf"]
+      "priority": [
+        "dnf"
+      ]
     },
     {
       "id": "fzf",
@@ -139,7 +165,9 @@
         "en": "Command line fuzzy finder."
       },
       "dnf_pkg": "fzf",
-      "priority": ["dnf"]
+      "priority": [
+        "dnf"
+      ]
     },
     {
       "id": "android-studio",
@@ -149,7 +177,9 @@
         "en": "Official environment for Android mobile apps."
       },
       "flatpak_id": "com.google.AndroidStudio",
-      "priority": ["flatpak"]
+      "priority": [
+        "flatpak"
+      ]
     },
     {
       "id": "unityhub",
@@ -160,7 +190,9 @@
       },
       "dnf_pkg": "unityhub",
       "repo_func": "add_unity_repo",
-      "priority": ["dnf"]
+      "priority": [
+        "dnf"
+      ]
     },
     {
       "id": "godot-net",
@@ -170,7 +202,9 @@
         "en": "Lightweight game engine with C# support."
       },
       "flatpak_id": "org.godotengine.GodotSharp",
-      "priority": ["flatpak"]
+      "priority": [
+        "flatpak"
+      ]
     },
     {
       "id": "dotnet-full",
@@ -180,7 +214,9 @@
         "en": "Full Microsoft development kit."
       },
       "custom_func": "install_dotnet_full",
-      "priority": ["custom"]
+      "priority": [
+        "custom"
+      ]
     },
     {
       "id": "docker",
@@ -190,7 +226,9 @@
         "en": "Containers to develop and run applications."
       },
       "custom_func": "install_docker_full",
-      "priority": ["custom"],
+      "priority": [
+        "custom"
+      ],
       "repair": "sudo systemctl enable --now docker && sudo usermod -aG docker $USER"
     },
     {
@@ -201,7 +239,9 @@
         "en": "Runtime environment for JS on server and NPM."
       },
       "dnf_pkg": "nodejs",
-      "priority": ["dnf"]
+      "priority": [
+        "dnf"
+      ]
     },
     {
       "id": "antigravity",
@@ -211,7 +251,9 @@
         "en": "Intelligent assistant setup for system maintenance."
       },
       "custom_func": "setup_antigravity",
-      "priority": ["custom"]
+      "priority": [
+        "custom"
+      ]
     }
   ]
 }
