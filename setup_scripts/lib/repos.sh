@@ -13,7 +13,14 @@ add_rpm_fusion() {
 add_vscode_repo() {
     log_info "Añadiendo repositorio de Visual Studio Code..."
     sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
-    sudo sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
+    sudo tee /etc/yum.repos.d/vscode.repo <<EOF
+[code]
+name=Visual Studio Code
+baseurl=https://packages.microsoft.com/yumrepos/vscode
+enabled=1
+gpgcheck=1
+gpgkey=https://packages.microsoft.com/keys/microsoft.asc
+EOF
 }
 
 add_brave_repo() {
@@ -48,10 +55,35 @@ add_google_chrome_repo() {
     sudo tee /etc/yum.repos.d/google-chrome.repo <<EOF
 [google-chrome]
 name=google-chrome
-baseurl=http://dl.google.com/linux/chrome/rpm/stable/x86_64
+baseurl=https://dl.google.com/linux/chrome/rpm/stable/x86_64
 enabled=1
 gpgcheck=1
 gpgkey=https://dl.google.com/linux/linux_signing_key.pub
+EOF
+}
+
+add_cursor_repo() {
+    log_info "Añadiendo repositorio de Cursor..."
+    sudo rpm --import https://downloads.cursor.com/keys/anysphere.asc
+    sudo tee /etc/yum.repos.d/cursor.repo <<EOF
+[cursor]
+name=Cursor
+baseurl=https://downloads.cursor.com/yumrepo
+enabled=1
+gpgcheck=1
+gpgkey=https://downloads.cursor.com/keys/anysphere.asc
+repo_gpgcheck=1
+EOF
+}
+
+add_antigravity_repo() {
+    log_info "Añadiendo repositorio de Antigravity..."
+    sudo tee /etc/yum.repos.d/antigravity.repo <<EOF
+[antigravity-rpm]
+name=Antigravity RPM Repository
+baseurl=https://us-central1-yum.pkg.dev/projects/antigravity-auto-updater-dev/antigravity-rpm
+enabled=1
+gpgcheck=0
 EOF
 }
 

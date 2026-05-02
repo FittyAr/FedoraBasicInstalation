@@ -1,3 +1,5 @@
+Los Walkthroughs, Task e Implementation Plan deben ser redactados en español.
+
 # Agentic Configuration - FedoraBasicInstalation
 
 Este archivo define las reglas y el contexto para que los agentes de IA (como Antigravity, Cursor, etc) operen dentro de este repositorio de forma segura y consistente.

@@ -52,9 +52,9 @@
         "es": "Editor de codigo de alto rendimiento escrito en Rust.",
         "en": "High-performance code editor written in Rust."
       },
-      "flatpak_id": "dev.zed.Zed",
+      "custom_func": "install_zed",
       "priority": [
-        "flatpak"
+        "custom"
       ]
     },
     {
@@ -64,9 +64,10 @@
         "es": "Editor de codigo optimizado para programar con IA.",
         "en": "Code editor optimized for programming with AI."
       },
-      "custom_func": "install_cursor",
+      "dnf_pkg": "cursor",
+      "repo_func": "add_cursor_repo",
       "priority": [
-        "custom"
+        "dnf"
       ]
     },
     {

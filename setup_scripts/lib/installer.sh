@@ -15,6 +15,8 @@ declare -A REPO_MAPPING=(
     ["tailscale"]="add_tailscale_repo"
     ["anydesk"]="add_anydesk_repo"
     ["teamviewer"]="add_teamviewer_repo"
+    ["antigravity"]="add_antigravity_repo"
+    ["cursor"]="add_cursor_repo"
 )
 
 
@@ -76,8 +78,14 @@ install_dotnet_full() {
 
 install_cursor() {
     log_info "Preparando Cursor AI..."
-    mkdir -p ~/Applications
-    log_warn "Descarga Cursor AI desde cursor.com y muévelo a ~/Applications."
+    # Cursor ahora se instala vía DNF gracias al repositorio añadido.
+    # Esta función queda como respaldo para configuraciones adicionales.
+    log_success "Cursor AI listo (instalado vía DNF)."
+}
+
+install_zed() {
+    log_info "Instalando Zed Editor vía script oficial..."
+    curl -f https://zed.dev/install.sh | sh
 }
 
 install_codecs() {
@@ -97,6 +105,7 @@ setup_antigravity() {
     if [ ! -f "agents.md" ]; then
         log_warn "Archivo agents.md no encontrado. Asegúrate de que exista en la raíz."
     fi
+    # Aquí se podrían añadir configuraciones post-instalación del paquete RPM
     log_success "Antigravity Agent listo para operar."
 }
 
