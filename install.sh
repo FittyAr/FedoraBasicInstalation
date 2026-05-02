@@ -3,21 +3,42 @@
 # Directorio base
 BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/setup_scripts"
 
-# Cargar librerias base para el selector de idioma
+# Cargar librerias base
 source "$BASE_DIR/lib/utils.sh"
 
-# --- SELECCIÓN DE IDIOMA ---
-LANG_CHOICE=$(whiptail --title "Language / Idioma" --menu "Select Language / Seleccione el idioma" 15 60 2 \
-    "es" "Español" \
-    "en" "English" 3>&1 1>&2 2>&3)
-
-if [ $? -ne 0 ]; then
+# --- PARSEAR ARGUMENTOS ---
+show_help() {
+    # Necesitamos cargar el idioma base para la ayuda si es posible
+    # Si no, usamos texto genérico o cargamos ES por defecto para la ayuda
+    source "$BASE_DIR/locales/es.sh"
+    echo -e "$STR_HELP_TEXT"
     exit 0
+}
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -l|--lang) export LANG_CODE="$2"; shift 2 ;;
+        -p|--preset) PRESET_FILE="$2"; shift 2 ;;
+        -d|--preset-dir) export PRESET_DIR="$2"; shift 2 ;;
+        -g|--debug) export DEBUG_MODE=true; shift ;;
+        -h|--help) show_help ;;
+        *) shift ;;
+    esac
+done
+
+# --- SELECCIÓN DE IDIOMA ---
+if [ -z "$LANG_CODE" ]; then
+    LANG_CHOICE=$(whiptail --title "Language / Idioma" --menu "Select Language / Seleccione el idioma" 15 60 2 \
+        "es" "Español" \
+        "en" "English" 3>&1 1>&2 2>&3)
+
+    if [ $? -ne 0 ]; then
+        exit 0
+    fi
+    export LANG_CODE="$LANG_CHOICE"
 fi
 
-export LANG_CODE="$LANG_CHOICE"
 source "$BASE_DIR/locales/$LANG_CODE.sh"
-
 
 # --- CARGAR RESTO DE LIBRERIAS ---
 source "$BASE_DIR/lib/json_parser.sh"
@@ -25,6 +46,11 @@ source "$BASE_DIR/lib/repos.sh"
 source "$BASE_DIR/lib/installer.sh"
 source "$BASE_DIR/lib/package_manager.sh"
 source "$BASE_DIR/lib/repair_manager.sh"
+source "$BASE_DIR/lib/presets.sh"
+
+# Inicializar entorno
+mkdir -p "$LOG_DIR"
+echo "--- Starting Session: $(date) ---" > "$SUMMARY_LOG"
 
 
 # Inicializar caches
@@ -78,8 +104,8 @@ show_category_ui() {
     local cat_name=$2
     local args=()
     
-    # Limpiar mapa para esta ventana
-    NAME_TO_ID_MAP=()
+    # Mapa temporal para esta ventana
+    declare -A LOCAL_NAME_MAP
     
     while IFS="|" read -r app_id app_name app_desc; do
         local state="${SELECTED_STATE[$app_id]}"
@@ -89,9 +115,10 @@ show_category_ui() {
             display_name="$STR_INSTALLED_TAG $app_name"
         fi
         
-        local name_tag=$(printf "%-30s" "$display_name")
-        NAME_TO_ID_MAP["$name_tag"]="$app_id"
-        args+=("$name_tag" "$app_desc" "$state")
+        # Columna 1 (Tag): Nombre formateado
+        # Columna 2 (Item): Descripción
+        args+=("$display_name" "$app_desc" "$state")
+        LOCAL_NAME_MAP["$display_name"]="$app_id"
     done < <(get_apps_by_category "$cat_id")
 
     local selected=$(whiptail --title "$cat_name" --checklist \
@@ -104,11 +131,12 @@ show_category_ui() {
         # Reset state for apps in this category
         while IFS="|" read -r aid rest; do SELECTED_STATE["$aid"]="OFF"; done < <(get_apps_by_category "$cat_id")
         
-        for tag in $selected; do
-            tag=$(echo $tag | tr -d '"')
-            local real_id="${NAME_TO_ID_MAP["$tag"]}"
-            if [ -n "$real_id" ]; then
-                SELECTED_STATE["$real_id"]="ON"
+        # Iterar correctamente sobre la selección (maneja comillas y espacios)
+        eval set -- "$selected"
+        for name in "$@"; do
+            local aid="${LOCAL_NAME_MAP["$name"]}"
+            if [ -n "$aid" ]; then
+                SELECTED_STATE["$aid"]="ON"
                 ((CAT_COUNTS["$cat_id"]++))
             fi
         done
@@ -139,6 +167,11 @@ show_repair_menu() {
 log_info "$STR_ANALYZING_SYSTEM"
 init_apps_state
 
+# Cargar preset si se pasó por parámetro
+if [ -n "$PRESET_FILE" ]; then
+    load_preset "$PRESET_FILE"
+fi
+
 while true; do
     menu_args=()
     while IFS="|" read -r cid cname; do
@@ -146,7 +179,13 @@ while true; do
         menu_args+=("$cid" "$cname [$count]")
     done < <(get_categories)
     
-    menu_args+=("REPAIR" "$STR_MENU_REPAIR" "INSTALL" "$STR_MENU_INSTALL" "EXIT" "$STR_MENU_EXIT")
+    menu_args+=(
+        "SAVE_PRESET" "$STR_MENU_SAVE_PRESET"
+        "LOAD_PRESET" "$STR_MENU_LOAD_PRESET"
+        "REPAIR" "$STR_MENU_REPAIR"
+        "INSTALL" "$STR_MENU_INSTALL"
+        "EXIT" "$STR_MENU_EXIT"
+    )
 
     total_sel=0
     for c in "${CAT_COUNTS[@]}"; do ((total_sel += c)); done
@@ -156,6 +195,11 @@ while true; do
     case "$CHOICE" in
         "INSTALL") break ;;
         "REPAIR") show_repair_menu ;;
+        "SAVE_PRESET")
+            p_name=$(whiptail --title "$STR_MENU_SAVE_PRESET" --inputbox "$STR_ENTER_PRESET_NAME" 10 60 3>&1 1>&2 2>&3)
+            [ $? -eq 0 ] && save_preset "$p_name"
+            ;;
+        "LOAD_PRESET") choose_preset_ui ;;
         "EXIT"|"") exit 0 ;;
         *) 
             cat_n="${CAT_NAME_MAP[$CHOICE]}"
@@ -171,3 +215,4 @@ for app_id in "${!SELECTED_STATE[@]}"; do
 done
 
 log_success "$STR_PROCESS_COMPLETED"
+log_info "$STR_SUMMARY_LOG_CREATED $SUMMARY_LOG"

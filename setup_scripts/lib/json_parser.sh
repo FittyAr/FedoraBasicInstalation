@@ -33,7 +33,7 @@ get_categories() {
 
 get_apps_by_category() {
     local cat_id=$1
-    jq -r ".categories[\"$cat_id\"].apps[] | \"\(.id)|\(.name)|\(.description.$LANG_CODE // .description.es)\"" "$MASTER_JSON_FILE"
+    jq -r ".categories[\"$cat_id\"].apps[]? | \"\(.id)|\(.name)|\(.description.$LANG_CODE // .description.es)\"" "$MASTER_JSON_FILE"
 }
 
 get_app_data() {
@@ -42,15 +42,15 @@ get_app_data() {
     
     # Query optimizada sobre el master file
     if [[ "$field" == "description" ]]; then
-        jq -r ".categories[].apps[] | select(.id==\"$app_id\") | .description.$LANG_CODE // .description.es" "$MASTER_JSON_FILE" | head -n 1
+        jq -r ".categories[].apps[]? | select(.id==\"$app_id\") | .description.$LANG_CODE // .description.es" "$MASTER_JSON_FILE" | head -n 1
     else
-        jq -r ".categories[].apps[] | select(.id==\"$app_id\") | .$field" "$MASTER_JSON_FILE" | head -n 1
+        jq -r ".categories[].apps[]? | select(.id==\"$app_id\") | .$field" "$MASTER_JSON_FILE" | head -n 1
     fi
 }
 
 get_app_priority() {
     local app_id=$1
-    jq -r ".categories[].apps[] | select(.id==\"$app_id\") | .priority[]" "$MASTER_JSON_FILE"
+    jq -r ".categories[].apps[]? | select(.id==\"$app_id\") | .priority[]?" "$MASTER_JSON_FILE"
 }
 
 get_global_repair_tools() {
@@ -64,3 +64,8 @@ get_repair_command() {
     get_app_data "$rid" "repair"
 }
 
+get_app_category_id() {
+    local app_id=$1
+    # Buscamos en qué categoría está la app de forma segura
+    jq -r ".categories[] | select(any(.apps[]?; .id == \"$app_id\")) | .id" "$MASTER_JSON_FILE" 2>/dev/null | head -n 1
+}

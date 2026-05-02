@@ -8,6 +8,10 @@ export BLUE='\033[0;34m'
 export MAGENTA='\033[0;35m'
 export CYAN='\033[0;36m'
 export NC='\033[0m'
+export DEBUG_MODE=false
+export PRESET_DIR="$(pwd)/presets"
+export LOG_DIR="$(pwd)/logs"
+export SUMMARY_LOG="$LOG_DIR/summary.log"
 
 # Iconos
 export CHECK="✔"
@@ -20,6 +24,13 @@ log_info() { echo -e "${BLUE}${INFO} $1${NC}"; }
 log_success() { echo -e "${GREEN}${CHECK} $1${NC}"; }
 log_warn() { echo -e "${YELLOW}${WARN} $1${NC}"; }
 log_error() { echo -e "${RED}${CROSS} $1${NC}"; }
+
+log_to_file() {
+    local file=$1
+    local msg=$2
+    mkdir -p "$(dirname "$file")"
+    echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] $msg" >> "$file"
+}
 
 # Verificación de dependencias críticas
 check_dependencies() {
