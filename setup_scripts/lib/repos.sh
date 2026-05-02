@@ -59,3 +59,20 @@ add_appimagelauncher_repo() {
     log_info "Añadiendo repositorio de AppImageLauncher (COPR)..."
     sudo dnf copr enable -y allexj/AppImageLauncher
 }
+
+add_warp_repo() {
+    log_info "Añadiendo repositorio de Warp Terminal..."
+    sudo rpm --import https://releases.warp.dev/linux/keys/warp.asc
+    sudo sh -c 'echo -e "[warpdotdev]\nname=warpdotdev\nbaseurl=https://releases.warp.dev/linux/rpm/stable\nenabled=1\ngpgcheck=1\ngpgkey=https://releases.warp.dev/linux/keys/warp.asc" > /etc/yum.repos.d/warpdotdev.repo'
+}
+
+add_tailscale_repo() {
+    log_info "Añadiendo repositorio de Tailscale..."
+    sudo dnf config-manager addrepo --from-repofile=https://pkgs.tailscale.com/stable/fedora/tailscale.repo
+}
+
+add_lazydocker_repo() {
+    log_info "Añadiendo repositorio de LazyDocker (COPR)..."
+    sudo dnf copr enable -y atim/lazydocker
+}
+
