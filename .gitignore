@@ -1,0 +1,20 @@
+# Logs
+*.log
+install_debug.txt
+
+# Editor backups y temporales
+*~
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+
+# Archivos de sistema / temporales
+/tmp/
+
+# AppImages y binarios descargados (si se descargan en el root)
+*.AppImage
+*.rpm

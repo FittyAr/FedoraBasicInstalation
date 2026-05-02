@@ -279,6 +279,13 @@
           "description": "Entorno de ejecucion para JS en servidor y NPM.",
           "dnf_pkg": "nodejs",
           "priority": ["dnf"]
+        },
+        {
+          "id": "antigravity",
+          "name": "Antigravity Agent",
+          "description": "Configuracion del asistente inteligente para mantenimiento del sistema.",
+          "custom_func": "setup_antigravity",
+          "priority": ["custom"]
         }
       ]
     },
@@ -378,6 +385,36 @@
           "dnf_pkg": "qbittorrent",
           "flatpak_id": "org.qbittorrent.qBittorrent",
           "priority": ["dnf", "flatpak"]
+        },
+        {
+          "id": "teamviewer",
+          "name": "TeamViewer",
+          "description": "Control remoto y soporte tecnico a distancia.",
+          "dnf_pkg": "teamviewer",
+          "repo_func": "add_teamviewer_repo",
+          "priority": ["dnf"]
+        },
+        {
+          "id": "anydesk",
+          "name": "AnyDesk",
+          "description": "Software de escritorio remoto rapido y seguro.",
+          "dnf_pkg": "anydesk",
+          "repo_func": "add_anydesk_repo",
+          "priority": ["dnf"]
+        },
+        {
+          "id": "rustdesk",
+          "name": "RustDesk",
+          "description": "Infraestructura de escritorio remoto de codigo abierto.",
+          "flatpak_id": "com.rustdesk.RustDesk",
+          "priority": ["flatpak"]
+        },
+        {
+          "id": "ferdium",
+          "name": "Ferdium",
+          "description": "Navegador de mensajeria todo-en-uno.",
+          "flatpak_id": "org.ferdium.Ferdium",
+          "priority": ["flatpak"]
         }
       ]
     },
@@ -524,6 +561,20 @@
           "dnf_pkg": "mediainfo-gui",
           "flatpak_id": "net.mediaarea.MediaInfo",
           "priority": ["dnf", "flatpak"]
+        },
+        {
+          "id": "pixelorama",
+          "name": "Pixelorama",
+          "description": "Editor de pixel art potente y gratuito.",
+          "flatpak_id": "com.orama_interactive.Pixelorama",
+          "priority": ["flatpak"]
+        },
+        {
+          "id": "tiled",
+          "name": "Tiled",
+          "description": "Editor de mapas de azulejos flexible y facil de usar.",
+          "flatpak_id": "org.mapeditor.Tiled",
+          "priority": ["flatpak"]
         }
       ]
     },

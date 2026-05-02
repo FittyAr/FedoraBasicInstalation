@@ -76,3 +76,21 @@ add_lazydocker_repo() {
     sudo dnf copr enable -y atim/lazydocker
 }
 
+add_teamviewer_repo() {
+    log_info "Añadiendo repositorio de TeamViewer..."
+    sudo dnf config-manager addrepo --from-repofile=https://linux.teamviewer.com/yum/stable/main/binary-x86_64/teamviewer.repo
+    sudo rpm --import https://linux.teamviewer.com/pubkey/TeamViewer2017.asc
+}
+
+add_anydesk_repo() {
+    log_info "Añadiendo repositorio de AnyDesk..."
+    sudo tee /etc/yum.repos.d/AnyDesk-Fedora.repo <<EOF
+[anydesk]
+name=AnyDesk Fedora - stable
+baseurl=http://rpm.anydesk.com/fedora/\$basearch/
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://keys.anydesk.com/repos/RPM-GPG-KEY
+EOF
+}
+

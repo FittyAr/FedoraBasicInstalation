@@ -14,7 +14,9 @@ declare -A REPO_MAPPING=(
     ["vscodium"]="add_vscodium_repo"
     ["warp-terminal"]="add_warp_repo"
     ["tailscale"]="add_tailscale_repo"
-    ["lazydocker"]="add_lazydocker_repo"
+    ["lazydocker"]="add_lazydocker_repo",
+    ["anydesk"]="add_anydesk_repo",
+    ["teamviewer"]="add_teamviewer_repo"
 )
 
 add_vscodium_repo() {
@@ -95,5 +97,13 @@ install_pkg() {
     local pkg=$1
     log_info "Instalando $pkg via DNF..."
     sudo dnf install -y "$pkg"
+}
+
+setup_antigravity() {
+    log_info "Configurando entorno para Antigravity Agent..."
+    if [ ! -f "agents.md" ]; then
+        log_warn "Archivo agents.md no encontrado. Asegúrate de que exista en la raíz."
+    fi
+    log_success "Antigravity Agent listo para operar."
 }
 
