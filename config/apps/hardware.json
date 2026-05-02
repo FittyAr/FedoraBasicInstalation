@@ -54,9 +54,8 @@
         "es": "Integracion facil de archivos .AppImage en el sistema.",
         "en": "Easy integration of .AppImage files into the system."
       },
-      "dnf_pkg": "appimagelauncher",
-      "repo_func": "add_appimagelauncher_repo",
-      "priority": ["dnf"]
+      "custom_func": "install_appimagelauncher_custom",
+      "priority": ["custom"]
     },
     {
       "id": "timeshift",

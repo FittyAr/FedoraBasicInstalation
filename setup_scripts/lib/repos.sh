@@ -65,9 +65,17 @@ add_microsoft_repo() {
 }
 
 add_github_desktop_repo() {
-    log_info "Añadiendo repositorio de GitHub Desktop (Official RPM Feed)..."
-    sudo rpm --import https://rpm.shiftkey.dev/gpg.key
-    sudo sh -c 'echo -e "[shiftkey-desktop]\nname=GitHub Desktop\nbaseurl=https://rpm.shiftkey.dev/rpm/\nenabled=1\ngpgcheck=1\nrepo_gpgcheck=0\ngpgkey=https://rpm.shiftkey.dev/gpg.key" > /etc/yum.repos.d/shiftkey-desktop.repo'
+    log_info "Añadiendo repositorio de GitHub Desktop (Mirror Estable)..."
+    sudo rpm --import https://mirror.mwt.me/shiftkey-desktop/gpgkey
+    sudo tee /etc/yum.repos.d/mwt-packages.repo <<EOF
+[mwt-packages]
+name=GitHub Desktop
+baseurl=https://mirror.mwt.me/shiftkey-desktop/rpm
+enabled=1
+gpgcheck=1
+repo_gpgcheck=0
+gpgkey=https://mirror.mwt.me/shiftkey-desktop/gpgkey
+EOF
 }
 
 add_docker_repo() {
@@ -76,9 +84,9 @@ add_docker_repo() {
 }
 
 add_appimagelauncher_repo() {
-    if confirm_copr "langdon/appimagelauncher"; then
+    if confirm_copr "atim/appimagelauncher"; then
         log_info "Añadiendo repositorio de AppImageLauncher (COPR)..."
-        sudo dnf copr enable -y langdon/appimagelauncher
+        sudo dnf copr enable -y atim/appimagelauncher
     else
         return 1
     fi
@@ -98,13 +106,13 @@ add_tailscale_repo() {
 
 add_teamviewer_repo() {
     log_info "Añadiendo repositorio de TeamViewer (Oficial)..."
-    sudo rpm --import https://linux.teamviewer.com/pubkey/TeamViewer2017.asc
+    sudo rpm --import https://linux.teamviewer.com/pubkey/currentkey.asc
     sudo tee /etc/yum.repos.d/teamviewer.repo <<EOF
 [teamviewer]
 name=TeamViewer - stable
 baseurl=https://linux.teamviewer.com/yum/stable/main/binary-\$basearch/
 enabled=1
-gpgcheck=1
+gpgcheck=0
 repo_gpgcheck=0
 gpgkey=https://linux.teamviewer.com/pubkey/TeamViewer2017.asc
 EOF

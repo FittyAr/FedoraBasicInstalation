@@ -107,8 +107,8 @@ confirm_copr() {
         return 0
     fi
     local msg=$(printf "${STR_COPR_CONFIRM_MSG:-Se requiere el repositorio COPR %s. ¿Proceder?}" "$repo")
-    echo -e "${YELLOW}${WARN} $msg${NC}"
-    echo -ne "${CYAN}¿Desea proceder? (s/n): ${NC}"
+    echo -e "${YELLOW}${WARN} $msg${NC}" > /dev/tty
+    echo -ne "${CYAN}¿Desea proceder? (s/n): ${NC}" > /dev/tty
     read -r response < /dev/tty
     if [[ "$response" =~ ^[sSyY]$ ]]; then
         return 0

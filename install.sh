@@ -67,7 +67,7 @@ if [ -f "/etc/yum.repos.d/ vscodium .repo" ]; then
     sudo rm -f "/etc/yum.repos.d/ vscodium .repo"
 fi
 # Limpiar repositorios para forzar regeneración limpia y evitar errores de GPG
-sudo rm -f /etc/yum.repos.d/shiftkey-desktop.repo /etc/yum.repos.d/unityhub.repo /etc/yum.repos.d/teamviewer.repo /etc/yum.repos.d/AnyDesk-Fedora.repo
+sudo rm -f /etc/yum.repos.d/shiftkey-desktop.repo /etc/yum.repos.d/unityhub.repo /etc/yum.repos.d/teamviewer.repo /etc/yum.repos.d/AnyDesk-Fedora.repo /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:langdon:appimagelauncher.repo
 
 # Sincronizar metadatos y aceptar llaves GPG de repositorios existentes automáticamente
 log_info "Sincronizando repositorios y aceptando llaves GPG..."
@@ -261,7 +261,7 @@ while true; do
     fi
 
     # Forzar whiptail a usar el terminal si el modo debug está activo
-    local wt_cmd=(whiptail --title "$STR_MAIN_MENU_TITLE - $STR_SELECTED_COUNT $total_sel" --menu "$STR_SELECTION_HINT" \
+    wt_cmd=(whiptail --title "$STR_MAIN_MENU_TITLE - $STR_SELECTED_COUNT $total_sel" --menu "$STR_SELECTION_HINT" \
         --ok-button "$STR_OK" --cancel-button "$STR_MENU_EXIT" \
         $HEIGHT $WIDTH $LIST_HEIGHT "${menu_args[@]}")
     

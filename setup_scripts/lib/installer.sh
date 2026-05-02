@@ -9,7 +9,6 @@ declare -A REPO_MAPPING=(
     ["google-chrome-stable"]="add_google_chrome_repo"
     ["GitHubDesktop"]="add_github_desktop_repo"
     ["docker-ce"]="add_docker_repo"
-    ["appimagelauncher"]="add_appimagelauncher_repo"
     ["dotnet-sdk-10.0"]="add_microsoft_repo"
     ["vscodium"]="add_vscodium_repo"
     ["warp-terminal"]="add_warp_repo"
@@ -104,4 +103,10 @@ setup_antigravity() {
 install_lazydocker_custom() {
     log_info "Instalando LazyDocker mediante script oficial..."
     curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
+}
+
+install_appimagelauncher_custom() {
+    log_info "Instalando AppImageLauncher desde GitHub Releases..."
+    local rpm_url="https://github.com/TheAssassin/AppImageLauncher/releases/download/v2.2.0/appimagelauncher-2.2.0-8fd5854.x86_64.rpm"
+    sudo dnf install -y "$rpm_url"
 }
