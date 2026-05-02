@@ -1,0 +1,229 @@
+{
+  "categories": [
+    {
+      "id": "hardware",
+      "name": "Hardware y Sistema",
+      "apps": [
+        {
+          "id": "nvidia",
+          "name": "Drivers NVIDIA",
+          "description": "Drivers oficiales privativos para maximo rendimiento 3D.",
+          "dnf_pkg": "akmod-nvidia",
+          "requires_repo": "rpm-fusion",
+          "priority": ["dnf"]
+        },
+        {
+          "id": "tlp",
+          "name": "TLP Bateria",
+          "description": "Optimizacion avanzada de energia para laptops.",
+          "dnf_pkg": "tlp",
+          "priority": ["dnf"]
+        },
+        {
+          "id": "codecs",
+          "name": "Codecs Multimedia",
+          "description": "Soporte para formatos propietarios (H.264, AAC, etc.).",
+          "custom_func": "install_codecs",
+          "priority": ["custom"]
+        },
+        {
+          "id": "appimagelauncher",
+          "name": "AppImageLauncher",
+          "description": "Integracion facil de archivos .AppImage en el sistema.",
+          "dnf_pkg": "appimagelauncher",
+          "repo_func": "add_appimagelauncher_repo",
+          "priority": ["dnf"]
+        },
+        {
+          "id": "timeshift",
+          "name": "Timeshift Snapshots",
+          "description": "Puntos de restauracion para revertir cambios del sistema.",
+          "dnf_pkg": "timeshift",
+          "priority": ["dnf"]
+        }
+      ]
+    },
+    {
+      "id": "development",
+      "name": "Desarrollo e IA",
+      "apps": [
+        {
+          "id": "code",
+          "name": "VS Code",
+          "description": "Editor de Microsoft con gran ecosistema de extensiones.",
+          "dnf_pkg": "code",
+          "repo_func": "add_vscode_repo",
+          "flatpak_id": "com.visualstudio.code",
+          "priority": ["dnf", "flatpak"]
+        },
+        {
+          "id": "vscodium",
+          "name": "VSCodium",
+          "description": "Version de VS Code 100% libre, sin telemetria.",
+          "dnf_pkg": "vscodium",
+          "repo_func": "add_vscodium_repo",
+          "flatpak_id": "com.vscodium.codium",
+          "priority": ["dnf", "flatpak"]
+        },
+        {
+          "id": "cursor",
+          "name": "Cursor AI",
+          "description": "Editor de codigo optimizado para programar con IA.",
+          "custom_func": "install_cursor",
+          "priority": ["custom"]
+        },
+        {
+          "id": "github-desktop",
+          "name": "GitHub Desktop",
+          "description": "Interfaz grafica intuitiva para gestionar Git y GitHub.",
+          "dnf_pkg": "GitHubDesktop",
+          "repo_func": "add_github_desktop_repo",
+          "priority": ["dnf"]
+        },
+        {
+          "id": "android-studio",
+          "name": "Android Studio",
+          "description": "Entorno oficial para apps moviles Android.",
+          "flatpak_id": "com.google.AndroidStudio",
+          "priority": ["flatpak"]
+        },
+        {
+          "id": "unityhub",
+          "name": "Unity Hub",
+          "description": "Gestor oficial para versiones y proyectos del motor Unity.",
+          "dnf_pkg": "unityhub",
+          "repo_func": "add_unity_repo",
+          "priority": ["dnf"]
+        },
+        {
+          "id": "godot-net",
+          "name": "Godot Engine .NET",
+          "description": "Motor de juegos ligero con soporte para C# (Flatpak).",
+          "flatpak_id": "org.godotengine.GodotSharp",
+          "priority": ["flatpak"]
+        },
+        {
+          "id": "dotnet-full",
+          "name": "NET 10 SDK",
+          "description": "Kit de desarrollo completo de Microsoft para apps modernas.",
+          "custom_func": "install_dotnet_full",
+          "priority": ["custom"]
+        },
+        {
+          "id": "docker",
+          "name": "Docker Desktop",
+          "description": "Contenedores para desarrollar y ejecutar aplicaciones.",
+          "custom_func": "install_docker_full",
+          "priority": ["custom"]
+        },
+        {
+          "id": "nodejs",
+          "name": "Node.js & NPM",
+          "description": "Entorno de ejecucion para JS en servidor y NPM.",
+          "dnf_pkg": "nodejs",
+          "priority": ["dnf"]
+        }
+      ]
+    },
+    {
+      "id": "internet",
+      "name": "Internet y Comunicacion",
+      "apps": [
+        {
+          "id": "brave-browser",
+          "name": "Brave Browser",
+          "description": "Navegador veloz con bloqueo de anuncios integrado.",
+          "dnf_pkg": "brave-browser",
+          "repo_func": "add_brave_repo",
+          "flatpak_id": "com.brave.Browser",
+          "priority": ["dnf", "flatpak"]
+        },
+        {
+          "id": "google-chrome",
+          "name": "Google Chrome",
+          "description": "El navegador mas usado, con sincronizacion de Google.",
+          "dnf_pkg": "google-chrome-stable",
+          "repo_func": "add_google_chrome_repo",
+          "priority": ["dnf"]
+        },
+        {
+          "id": "telegram",
+          "name": "Telegram Desktop",
+          "description": "Mensajeria rapida, segura y multidispositivo.",
+          "dnf_pkg": "telegram-desktop",
+          "flatpak_id": "org.telegram.desktop",
+          "priority": ["dnf", "flatpak"]
+        },
+        {
+          "id": "discord",
+          "name": "Discord",
+          "description": "Plataforma de comunicacion para comunidades y gamers.",
+          "dnf_pkg": "discord",
+          "flatpak_id": "com.discordapp.Discord",
+          "priority": ["dnf", "flatpak"]
+        },
+        {
+          "id": "qbittorrent",
+          "name": "qBittorrent",
+          "description": "Cliente BitTorrent libre, ligero y potente.",
+          "dnf_pkg": "qbittorrent",
+          "flatpak_id": "org.qbittorrent.qBittorrent",
+          "priority": ["dnf", "flatpak"]
+        }
+      ]
+    },
+    {
+      "id": "gaming",
+      "name": "Gaming y Creatividad",
+      "apps": [
+        {
+          "id": "steam",
+          "name": "Steam",
+          "description": "La plataforma de videojuegos mas grande disponible.",
+          "dnf_pkg": "steam",
+          "flatpak_id": "com.valvesoftware.Steam",
+          "priority": ["dnf", "flatpak"]
+        },
+        {
+          "id": "lutris",
+          "name": "Lutris",
+          "description": "Gestor de juegos todo-en-uno (Epic, GOG, Steam, etc.).",
+          "dnf_pkg": "lutris",
+          "flatpak_id": "net.lutris.Lutris",
+          "priority": ["dnf", "flatpak"]
+        },
+        {
+          "id": "heroic",
+          "name": "Heroic Launcher",
+          "description": "Cliente abierto para Epic Games, GOG y Amazon.",
+          "flatpak_id": "com.heroicgameslauncher.hgl",
+          "priority": ["flatpak"]
+        },
+        {
+          "id": "gimp",
+          "name": "GIMP Editor",
+          "description": "Editor de imagenes profesional y libre.",
+          "dnf_pkg": "gimp",
+          "flatpak_id": "org.gimp.GIMP",
+          "priority": ["dnf", "flatpak"]
+        },
+        {
+          "id": "inkscape",
+          "name": "Inkscape",
+          "description": "Herramienta de diseño vectorial profesional.",
+          "dnf_pkg": "inkscape",
+          "flatpak_id": "org.inkscape.Inkscape",
+          "priority": ["dnf", "flatpak"]
+        },
+        {
+          "id": "onlyoffice",
+          "name": "OnlyOffice",
+          "description": "Suite ofimatica con gran compatibilidad MS Office.",
+          "flatpak_id": "org.onlyoffice.desktopeditors",
+          "priority": ["flatpak"]
+        }
+      ]
+    }
+  ],
+  "repair_tools": []
+}

@@ -16,20 +16,26 @@ export INFO="ℹ"
 export WARN="⚠"
 export ROCKET="🚀"
 
-log_info() {
-    echo -e "${BLUE}${INFO} $1${NC}"
-}
+log_info() { echo -e "${BLUE}${INFO} $1${NC}"; }
+log_success() { echo -e "${GREEN}${CHECK} $1${NC}"; }
+log_warn() { echo -e "${YELLOW}${WARN} $1${NC}"; }
+log_error() { echo -e "${RED}${CROSS} $1${NC}"; }
 
-log_success() {
-    echo -e "${GREEN}${CHECK} $1${NC}"
-}
+# Verificación de dependencias críticas
+check_dependencies() {
+    local deps=("whiptail" "jq" "curl")
+    local missing=()
+    
+    for dep in "${deps[@]}"; do
+        if ! command -v "$dep" &> /dev/null; then
+            missing+=("$dep")
+        fi
+    done
 
-log_warn() {
-    echo -e "${YELLOW}${WARN} $1${NC}"
-}
-
-log_error() {
-    echo -e "${RED}${CROSS} $1${NC}"
+    if [ ${#missing[@]} -gt 0 ]; then
+        log_info "Instalando dependencias faltantes: ${missing[*]}..."
+        sudo dnf install -y newt jq curl
+    fi
 }
 
 check_distro() {
@@ -43,17 +49,14 @@ check_distro() {
 }
 
 is_laptop() {
-    if ls /sys/class/power_supply/ | grep -q "BAT"; then
-        return 0
-    else
-        return 1
-    fi
+    ls /sys/class/power_supply/ | grep -q "BAT"
 }
 
 has_nvidia() {
-    if lspci | grep -qi "nvidia"; then
-        return 0
-    else
-        return 1
-    fi
+    lspci | grep -qi "nvidia"
 }
+
+# Inicializar entorno
+check_dependencies
+DISTRO=$(check_distro)
+export DISTRO
