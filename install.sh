@@ -18,12 +18,19 @@ fi
 export LANG_CODE="$LANG_CHOICE"
 source "$BASE_DIR/locales/$LANG_CODE.sh"
 
+
 # --- CARGAR RESTO DE LIBRERIAS ---
 source "$BASE_DIR/lib/json_parser.sh"
 source "$BASE_DIR/lib/repos.sh"
 source "$BASE_DIR/lib/installer.sh"
 source "$BASE_DIR/lib/package_manager.sh"
 source "$BASE_DIR/lib/repair_manager.sh"
+
+
+# Inicializar caches
+build_master_json
+refresh_package_cache
+
 
 # 1. OPTIMIZACIÓN DE DNF
 if [[ "$DISTRO" != "unknown" ]]; then
@@ -37,6 +44,8 @@ fi
 declare -A SELECTED_STATE
 declare -A NAME_TO_ID_MAP
 declare -A CAT_NAME_MAP
+declare -A CAT_COUNTS
+
 
 # Detección dinámica de terminal
 TERM_COLS=$(tput cols 2>/dev/null || echo 80)
@@ -49,15 +58,20 @@ LIST_HEIGHT=$((HEIGHT - 10))
 init_apps_state() {
     while IFS="|" read -r cat_id cat_name; do
         CAT_NAME_MAP["$cat_id"]="$cat_name"
+        CAT_COUNTS["$cat_id"]=0
         while IFS="|" read -r app_id app_name app_desc; do
             if is_installed "$app_id"; then
-                SELECTED_STATE["$app_id"]="ON"
+                # Apps ya instaladas no cuentan como "seleccionadas para instalar" 
+                # pero podemos marcarlas si queremos. En el diseño actual, 
+                # SELECTED_STATE se usa para la checklist de whiptail.
+                SELECTED_STATE["$app_id"]="OFF"
             else
                 SELECTED_STATE["$app_id"]="OFF"
             fi
         done < <(get_apps_by_category "$cat_id")
     done < <(get_categories)
 }
+
 
 show_category_ui() {
     local cat_id=$1
@@ -85,14 +99,22 @@ show_category_ui() {
         $HEIGHT $WIDTH $LIST_HEIGHT "${args[@]}" 3>&1 1>&2 2>&3)
     
     if [ $? -eq 0 ]; then
+        # Reset count for this category
+        CAT_COUNTS["$cat_id"]=0
+        # Reset state for apps in this category
         while IFS="|" read -r aid rest; do SELECTED_STATE["$aid"]="OFF"; done < <(get_apps_by_category "$cat_id")
+        
         for tag in $selected; do
             tag=$(echo $tag | tr -d '"')
             local real_id="${NAME_TO_ID_MAP["$tag"]}"
-            [ -n "$real_id" ] && SELECTED_STATE["$real_id"]="ON"
+            if [ -n "$real_id" ]; then
+                SELECTED_STATE["$real_id"]="ON"
+                ((CAT_COUNTS["$cat_id"]++))
+            fi
         done
     fi
 }
+
 
 show_repair_menu() {
     local args=()
@@ -120,15 +142,16 @@ init_apps_state
 while true; do
     menu_args=()
     while IFS="|" read -r cid cname; do
-        count=0
-        while IFS="|" read -r aid rest; do [[ "${SELECTED_STATE[$aid]}" == "ON" ]] && ((count++)); done < <(get_apps_by_category "$cid")
+        count=${CAT_COUNTS[$cid]:-0}
         menu_args+=("$cid" "$cname [$count]")
     done < <(get_categories)
     
     menu_args+=("REPAIR" "$STR_MENU_REPAIR" "INSTALL" "$STR_MENU_INSTALL" "EXIT" "$STR_MENU_EXIT")
 
-    total_sel=$(for i in "${SELECTED_STATE[@]}"; do [[ $i == "ON" ]] && echo 1; done | wc -l)
+    total_sel=0
+    for c in "${CAT_COUNTS[@]}"; do ((total_sel += c)); done
     CHOICE=$(whiptail --title "$STR_MAIN_MENU_TITLE" --menu "$STR_SELECTED_COUNT $total_sel" $HEIGHT $WIDTH $LIST_HEIGHT "${menu_args[@]}" 3>&1 1>&2 2>&3)
+
 
     case "$CHOICE" in
         "INSTALL") break ;;

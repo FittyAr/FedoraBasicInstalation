@@ -9,56 +9,48 @@ REPAIR_FILE="$CONFIG_DIR/repair_tools.json"
 # Si no está definido, por defecto es 'es'
 export LANG_CODE="${LANG_CODE:-es}"
 
-get_categories() {
+
+# Archivo temporal para el JSON consolidado
+export MASTER_JSON_FILE="/tmp/fedora_installer_master.json"
+
+build_master_json() {
+    # Combinar todos los archivos en uno solo para consultas rápidas
+    local tmp_dir=$(mktemp -d)
     for f in "$APPS_DIR/"*.json; do
         [ -e "$f" ] || continue
         local id=$(basename "$f" .json)
-        # Seleccionar nombre según idioma
-        local name_field="name"
-        [ "$LANG_CODE" != "es" ] && name_field="name_$LANG_CODE"
-        local name=$(jq -r ".$name_field // .name" "$f")
-        echo "$id|$name"
+        jq --arg id "$id" '. + {id: $id}' "$f" > "$tmp_dir/$id.json"
     done
+    jq -s 'reduce .[] as $item ({}; .categories[$item.id] = $item)' "$tmp_dir/"*.json > "$MASTER_JSON_FILE"
+    rm -rf "$tmp_dir"
+}
+
+get_categories() {
+    local name_field="name"
+    [ "$LANG_CODE" != "es" ] && name_field="name_$LANG_CODE"
+    jq -r ".categories[] | \"\(.id)|\(.$name_field // .name)\"" "$MASTER_JSON_FILE"
 }
 
 get_apps_by_category() {
     local cat_id=$1
-    local f="$APPS_DIR/$cat_id.json"
-    if [ -f "$f" ]; then
-        jq -r ".apps[] | \"\(.id)|\(.name)|\(.description.$LANG_CODE // .description.es)\"" "$f"
-    fi
+    jq -r ".categories[\"$cat_id\"].apps[] | \"\(.id)|\(.name)|\(.description.$LANG_CODE // .description.es)\"" "$MASTER_JSON_FILE"
 }
 
 get_app_data() {
     local app_id=$1
     local field=$2
     
-    # Buscar en todos los archivos de apps
-    for f in "$APPS_DIR/"*.json; do
-        [ -e "$f" ] || continue
-        local res=$(jq -r ".apps[] | select(.id==\"$app_id\") | .$field" "$f" 2>/dev/null)
-        if [ "$res" != "null" ] && [ -n "$res" ]; then
-            # Si el campo es un objeto (como description), devolver el idioma correcto
-            if [[ "$field" == "description" ]]; then
-                 jq -r ".apps[] | select(.id==\"$app_id\") | .description.$LANG_CODE // .description.es" "$f"
-                 return
-            fi
-            echo "$res"
-            return
-        fi
-    done
+    # Query optimizada sobre el master file
+    if [[ "$field" == "description" ]]; then
+        jq -r ".categories[].apps[] | select(.id==\"$app_id\") | .description.$LANG_CODE // .description.es" "$MASTER_JSON_FILE" | head -n 1
+    else
+        jq -r ".categories[].apps[] | select(.id==\"$app_id\") | .$field" "$MASTER_JSON_FILE" | head -n 1
+    fi
 }
 
 get_app_priority() {
     local app_id=$1
-    for f in "$APPS_DIR/"*.json; do
-        [ -e "$f" ] || continue
-        local res=$(jq -r ".apps[] | select(.id==\"$app_id\") | .priority[]" "$f" 2>/dev/null)
-        if [ -n "$res" ]; then
-            echo "$res"
-            return
-        fi
-    done
+    jq -r ".categories[].apps[] | select(.id==\"$app_id\") | .priority[]" "$MASTER_JSON_FILE"
 }
 
 get_global_repair_tools() {
@@ -67,12 +59,8 @@ get_global_repair_tools() {
 
 get_repair_command() {
     local rid=$1
-    # Buscar en herramientas globales
     local cmd=$(jq -r ".repair_tools[] | select(.id==\"$rid\") | .command" "$REPAIR_FILE" 2>/dev/null)
-    if [ "$cmd" != "null" ] && [ -n "$cmd" ]; then
-        echo "$cmd"
-        return
-    fi
-    # Buscar en apps
+    [ "$cmd" != "null" ] && [ -n "$cmd" ] && echo "$cmd" && return
     get_app_data "$rid" "repair"
 }
+

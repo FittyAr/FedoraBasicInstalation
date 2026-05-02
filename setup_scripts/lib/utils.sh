@@ -59,7 +59,31 @@ has_nvidia() {
     lspci | grep -qi "nvidia"
 }
 
+
+# Cache de paquetes instalados
+declare -g -A INSTALLED_DNF
+declare -g -A INSTALLED_FLATPAK
+
+refresh_package_cache() {
+    INSTALLED_DNF=()
+    INSTALLED_FLATPAK=()
+    
+    # Cache DNF (solo nombres de paquetes)
+    # Usamos dnf repoquery para mayor rapidez o awk sobre dnf list
+    while read -r pkg; do
+        INSTALLED_DNF["${pkg%%.*}"]=1
+    done < <(dnf list installed --quiet | awk '{print $1}' | tail -n +2)
+
+    # Cache Flatpak
+    if command -v flatpak &> /dev/null; then
+        while read -r fid; do
+            INSTALLED_FLATPAK["$fid"]=1
+        done < <(flatpak list --columns=application 2>/dev/null)
+    fi
+}
+
 # Inicializar entorno
 check_dependencies
 DISTRO=$(check_distro)
 export DISTRO
+
