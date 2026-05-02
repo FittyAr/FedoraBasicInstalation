@@ -33,11 +33,11 @@ install_tiered() {
             "dnf")
                 local pkg=$(get_app_data "$app_id" "dnf_pkg")
                 local repo_func=$(get_app_data "$app_id" "repo_func")
+                local requires_repo=$(get_app_data "$app_id" "requires_repo")
                 
-                # Si requiere repositorio especial
-                if [ "$repo_func" != "null" ]; then
-                    $repo_func
-                fi
+                # Repositorios especiales
+                [ "$repo_func" != "null" ] && $repo_func
+                [ "$requires_repo" == "rpm-fusion" ] && add_rpm_fusion
                 
                 if sudo dnf install -y "$pkg"; then
                     log_success "$app_id instalado via DNF."
@@ -46,7 +46,6 @@ install_tiered() {
                 ;;
             "flatpak")
                 local fid=$(get_app_data "$app_id" "flatpak_id")
-                # Asegurar flathub
                 sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
                 if sudo flatpak install -y flathub "$fid"; then
                     log_success "$app_id instalado via Flatpak."

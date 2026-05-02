@@ -10,21 +10,24 @@
           "description": "Drivers oficiales privativos para maximo rendimiento 3D.",
           "dnf_pkg": "akmod-nvidia",
           "requires_repo": "rpm-fusion",
-          "priority": ["dnf"]
+          "priority": ["dnf"],
+          "repair": "sudo dnf reinstall -y akmod-nvidia xorg-x11-drv-nvidia-cuda && sudo akmods --force"
         },
         {
           "id": "tlp",
           "name": "TLP Bateria",
           "description": "Optimizacion avanzada de energia para laptops.",
           "dnf_pkg": "tlp",
-          "priority": ["dnf"]
+          "priority": ["dnf"],
+          "repair": "sudo systemctl enable --now tlp && sudo tlp start"
         },
         {
           "id": "codecs",
           "name": "Codecs Multimedia",
           "description": "Soporte para formatos propietarios (H.264, AAC, etc.).",
           "custom_func": "install_codecs",
-          "priority": ["custom"]
+          "priority": ["custom"],
+          "repair": "sudo dnf swap -y ffmpeg-free ffmpeg --allowerasing"
         },
         {
           "id": "appimagelauncher",
@@ -73,6 +76,14 @@
           "priority": ["custom"]
         },
         {
+          "id": "ollama",
+          "name": "Ollama",
+          "description": "Servidor local de LLMs (Llama 3, Phi, etc.).",
+          "custom_func": "install_ollama",
+          "priority": ["custom"],
+          "repair": "sudo systemctl restart ollama"
+        },
+        {
           "id": "github-desktop",
           "name": "GitHub Desktop",
           "description": "Interfaz grafica intuitiva para gestionar Git y GitHub.",
@@ -90,7 +101,7 @@
         {
           "id": "unityhub",
           "name": "Unity Hub",
-          "description": "Gestor oficial para versiones y proyectos del motor Unity.",
+          "description": "Gestor oficial para instalar versiones del motor Unity.",
           "dnf_pkg": "unityhub",
           "repo_func": "add_unity_repo",
           "priority": ["dnf"]
@@ -98,14 +109,14 @@
         {
           "id": "godot-net",
           "name": "Godot Engine .NET",
-          "description": "Motor de juegos ligero con soporte para C# (Flatpak).",
+          "description": "Motor de juegos ligero con soporte para C#.",
           "flatpak_id": "org.godotengine.GodotSharp",
           "priority": ["flatpak"]
         },
         {
           "id": "dotnet-full",
           "name": "NET 10 SDK",
-          "description": "Kit de desarrollo completo de Microsoft para apps modernas.",
+          "description": "Kit de desarrollo completo de Microsoft.",
           "custom_func": "install_dotnet_full",
           "priority": ["custom"]
         },
@@ -114,7 +125,8 @@
           "name": "Docker Desktop",
           "description": "Contenedores para desarrollar y ejecutar aplicaciones.",
           "custom_func": "install_docker_full",
-          "priority": ["custom"]
+          "priority": ["custom"],
+          "repair": "sudo systemctl enable --now docker && sudo usermod -aG docker $USER"
         },
         {
           "id": "nodejs",
@@ -225,5 +237,21 @@
       ]
     }
   ],
-  "repair_tools": []
+  "repair_tools": [
+    {
+      "id": "dnf_clean",
+      "name": "Limpiar Cache DNF",
+      "command": "sudo dnf clean all && sudo dnf makecache"
+    },
+    {
+      "id": "flatpak_repair",
+      "name": "Reparar Flatpaks",
+      "command": "sudo flatpak repair"
+    },
+    {
+      "id": "rpm_fix",
+      "name": "Reparar RPM Fusion",
+      "command": "sudo dnf install -y rpmfusion-free-release rpmfusion-nonfree-release --forcearch"
+    }
+  ]
 }
