@@ -53,12 +53,28 @@ install_docker_full() {
     log_warn "$STR_DOCKER_LOGOUT"
 }
 
+uninstall_docker_full() {
+    log_info "Eliminando Docker Desktop..."
+    if rpm -q docker-desktop &>/dev/null; then
+        sudo dnf remove -y docker-desktop
+    fi
+    sudo systemctl disable --now docker 2>/dev/null || true
+    return 0
+}
+
 install_tailscale_full() {
     log_info "$STR_INSTALL_TAILSCALE"
     add_tailscale_repo
     sudo dnf install -y tailscale
     sudo systemctl enable --now tailscaled
     log_warn "$STR_TAILSCALE_READY"
+}
+
+uninstall_tailscale_full() {
+    log_info "Eliminando Tailscale..."
+    sudo systemctl stop tailscaled
+    sudo systemctl disable tailscaled
+    sudo dnf remove -y tailscale
 }
 
 install_waydroid_full() {
@@ -89,6 +105,22 @@ install_photogimp() {
     log_success "$STR_PHOTOGIMP_SUCCESS"
 }
 
+uninstall_photogimp() {
+    log_info "Eliminando PhotoGIMP y GIMP al completo..."
+    # Eliminar iconos y accesos directos
+    rm -f "$HOME/.local/share/applications/org.gimp.GIMP.desktop"
+    rm -rf "$HOME/.icons/PhotoGIMP"
+    
+    # Desinstalar GIMP Flatpak si existe
+    if command -v flatpak &>/dev/null; then
+        flatpak uninstall -y org.gimp.GIMP
+    fi
+    
+    # Eliminar toda la configuración de GIMP (incluye los parches de PhotoGIMP)
+    rm -rf "$HOME/.var/app/org.gimp.GIMP"
+    log_success "GIMP y PhotoGIMP eliminados al completo (incluyendo configuración)."
+}
+
 install_ollama() {
     log_info "$STR_INSTALL_OLLAMA"
     
@@ -104,6 +136,16 @@ install_ollama() {
 
     curl -fsSL https://ollama.com/install.sh | sh
     sudo systemctl enable --now ollama
+}
+
+uninstall_ollama() {
+    log_info "Eliminando Ollama..."
+    sudo systemctl stop ollama
+    sudo systemctl disable ollama
+    sudo rm -f /etc/systemd/system/ollama.service
+    sudo rm -f $(which ollama)
+    sudo userdel ollama
+    sudo groupdel ollama
 }
 
 install_dotnet_full() {
@@ -130,6 +172,12 @@ install_zed() {
     curl -f https://zed.dev/install.sh | sh
 }
 
+uninstall_zed() {
+    log_info "Eliminando Zed Editor..."
+    rm -f "$HOME/.local/bin/zed"
+    rm -rf "$HOME/.local/share/zed"
+}
+
 install_codecs() {
     log_info "$STR_INSTALL_CODECS"
     sudo dnf swap -y ffmpeg-free ffmpeg --allowerasing
@@ -149,6 +197,12 @@ setup_antigravity() {
     fi
     # Aquí se podrían añadir configuraciones post-instalación del paquete RPM
     log_success "$STR_AG_READY"
+}
+
+uninstall_antigravity() {
+    log_info "Eliminando configuración de Antigravity..."
+    # Por ahora solo logueamos, ya que es principalmente configuración
+    return 0
 }
 
 install_rustdesk_custom() {
@@ -178,9 +232,19 @@ install_rustdesk_custom() {
     log_success "$STR_RUSTDESK_SUCCESS"
 }
 
+uninstall_rustdesk_custom() {
+    log_info "Eliminando RustDesk (Ambito de Usuario)..."
+    flatpak --user uninstall -y com.rustdesk.RustDesk
+}
+
 install_lazydocker_custom() {
     log_info "$STR_INSTALL_LAZYDOCKER"
     curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
+}
+
+uninstall_lazydocker_custom() {
+    log_info "Eliminando LazyDocker..."
+    sudo rm -f /usr/local/bin/lazydocker
 }
 
 install_tlp_full() {
@@ -202,5 +266,23 @@ install_tlp_full() {
     sudo systemctl enable --now tlp
     sudo tlp start
     log_success "TLP instalado y configurado correctamente."
+}
+
+uninstall_tlp_full() {
+    log_info "Eliminando TLP..."
+    sudo systemctl stop tlp &>/dev/null
+    sudo systemctl disable --now tlp &>/dev/null
+    sudo dnf remove -y tlp tlp-rdw
+    # Intentar restaurar el perfil de energia por defecto de Fedora
+    if ! systemctl is-active power-profiles-daemon &>/dev/null; then
+        sudo dnf install -y power-profiles-daemon &>/dev/null
+        sudo systemctl enable --now power-profiles-daemon &>/dev/null
+    fi
+}
+
+uninstall_rpm_fusion() {
+    log_info "Eliminando repositorios RPM Fusion..."
+    sudo dnf remove -y rpmfusion-free-release rpmfusion-nonfree-release
+    sudo dnf clean all
 }
 

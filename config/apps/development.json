@@ -53,6 +53,7 @@
         "en": "High-performance code editor written in Rust."
       },
       "custom_func": "install_zed",
+      "custom_uninstall_func": "uninstall_zed",
       "priority": [
         "custom"
       ]
@@ -78,6 +79,7 @@
         "en": "Local server for LLMs (Llama 3, Phi, etc.)."
       },
       "custom_func": "install_ollama",
+      "custom_uninstall_func": "uninstall_ollama",
       "priority": [
         "custom"
       ],
@@ -142,6 +144,7 @@
         "en": "Terminal interface for Docker and Docker Compose."
       },
       "custom_func": "install_lazydocker_custom",
+      "custom_uninstall_func": "uninstall_lazydocker_custom",
       "priority": [
         "custom"
       ]
@@ -229,6 +232,7 @@
         "en": "Containers to develop and run applications."
       },
       "custom_func": "install_docker_full",
+      "custom_uninstall_func": "uninstall_docker_full",
       "priority": [
         "custom"
       ],
@@ -254,6 +258,7 @@
         "en": "Intelligent assistant setup for system maintenance."
       },
       "custom_func": "setup_antigravity",
+      "custom_uninstall_func": "uninstall_antigravity",
       "priority": [
         "custom"
       ]

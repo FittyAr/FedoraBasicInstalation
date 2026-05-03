@@ -50,10 +50,15 @@ has_desktop_file() {
         "$HOME/.var/app/*/desktop" 
     )
     
+    local search_pattern="*$app_id*.desktop"
+    if [[ "$app_id" == "cursor" ]]; then
+        search_pattern="cursor*.desktop"
+    fi
+
     for path in "${paths[@]}"; do
         [ ! -d "$path" ] && continue
-        # Búsqueda insensible a mayúsculas para mayor compatibilidad (ej: RustDesk.desktop)
-        if find "$path" -maxdepth 1 -iname "*$app_id*.desktop" | grep -q "."; then
+        # Búsqueda insensible a mayúsculas para mayor compatibilidad y exclusión de componentes del sistema
+        if find "$path" -maxdepth 1 -iname "$search_pattern" -not -name "kcm_*" -not -name "gnome-*" | grep -q "."; then
             return 0
         fi
     done

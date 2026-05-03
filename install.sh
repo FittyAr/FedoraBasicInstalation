@@ -55,6 +55,7 @@ source "$BASE_DIR/lib/installer.sh"
 source "$BASE_DIR/lib/package_manager.sh"
 source "$BASE_DIR/lib/repair_manager.sh"
 source "$BASE_DIR/lib/presets.sh"
+source "$BASE_DIR/lib/uninstaller.sh"
 
 # Inicializar entorno
 mkdir -p "$LOG_DIR"
@@ -236,6 +237,7 @@ while true; do
         "SAVE_PRESET" "$STR_MENU_SAVE_PRESET"
         "LOAD_PRESET" "$STR_MENU_LOAD_PRESET"
         "REPAIR"      "$STR_MENU_REPAIR"
+        "UNINSTALL"   "$STR_MENU_UNINSTALL"
         "INSTALL"     "$STR_MENU_INSTALL"
         "EXIT"        "$STR_MENU_EXIT"
     )
@@ -303,6 +305,7 @@ while true; do
     case "$CHOICE" in
         "INSTALL") break ;;
         "REPAIR") show_repair_menu ;;
+        "UNINSTALL") show_uninstaller_menu ;;
         "SAVE_PRESET")
             p_name=$(whiptail --title "$STR_MENU_SAVE_PRESET" --inputbox "$STR_ENTER_PRESET_NAME" \
                 --ok-button "$STR_OK" --cancel-button "$STR_CANCEL" \

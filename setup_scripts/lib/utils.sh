@@ -14,6 +14,7 @@ export PRESET_DIR="$REPO_ROOT/presets"
 export LOG_DIR="$REPO_ROOT/logs"
 export SUMMARY_LOG="$LOG_DIR/summary.log"
 export PRESET_VERSION="1.0"
+export CRITICAL_PACKAGES="flatpak snapd dnf dnf5 sudo bash coreutils kernel glibc systemd rpm whiptail sed awk grep find snapper snapper-libs"
 
 
 # Iconos (solo para terminal, no para whiptail)

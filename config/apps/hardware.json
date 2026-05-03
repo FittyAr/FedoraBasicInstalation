@@ -11,6 +11,7 @@
         "en": "Essential repositories for non-free software and codecs."
       },
       "custom_func": "add_rpm_fusion",
+      "custom_uninstall_func": "uninstall_rpm_fusion",
       "priority": ["custom"]
     },
     {
@@ -33,6 +34,7 @@
         "en": "Advanced power optimization for laptops."
       },
       "custom_func": "install_tlp_full",
+      "custom_uninstall_func": "uninstall_tlp_full",
       "priority": ["custom"],
       "repair": "sudo systemctl enable --now tlp && sudo tlp start"
     },
@@ -108,6 +110,7 @@
       "dnf_pkg": "tailscale",
       "repo_func": "add_tailscale_repo",
       "custom_func": "install_tailscale_full",
+      "custom_uninstall_func": "uninstall_tailscale_full",
       "priority": ["custom"]
     },
     {

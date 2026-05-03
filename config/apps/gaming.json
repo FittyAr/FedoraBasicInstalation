@@ -88,6 +88,7 @@
         "en": "Aesthetic patch to make GIMP look like Photoshop."
       },
       "custom_func": "install_photogimp",
+      "custom_uninstall_func": "uninstall_photogimp",
       "priority": ["custom"]
     },
     {
@@ -163,7 +164,7 @@
         "es": "Conversor de video multiformato de codigo abierto.",
         "en": "Open-source multi-format video converter."
       },
-      "dnf_pkg": "HandBrake-gui",
+      "dnf_pkg": "HandBrake HandBrake-gui",
       "flatpak_id": "fr.handbrake.ghb",
       "priority": ["dnf", "flatpak"]
     },
