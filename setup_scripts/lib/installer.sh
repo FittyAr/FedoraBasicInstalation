@@ -66,14 +66,31 @@ install_photogimp() {
 
 install_ollama() {
     log_info "Instalando Ollama..."
+    
+    if has_nvidia; then
+        log_info "GPU NVIDIA detectada. Ollama utilizará aceleración CUDA."
+        # El script oficial de Ollama detecta y configura NVIDIA automáticamente
+    elif has_amd; then
+        log_info "GPU AMD detectada. Asegúrate de tener ROCm instalado para aceleración."
+        log_warn "Ollama soporta AMD vía ROCm v6+. Consultar docs.ollama.com si hay problemas."
+    else
+        log_warn "No se detectó GPU dedicada compatible. Ollama se ejecutará en modo CPU."
+    fi
+
     curl -fsSL https://ollama.com/install.sh | sh
     sudo systemctl enable --now ollama
 }
 
 install_dotnet_full() {
     log_info "Instalando .NET 10 SDK completo..."
+    # Según docs de Microsoft para Fedora
     sudo dnf install -y dotnet-sdk-10.0 aspnetcore-runtime-10.0 dotnet-runtime-10.0
-    sudo dotnet workload install android wasm-tools
+    
+    # Instalación de workloads comunes si es necesario
+    if command -v dotnet &> /dev/null; then
+        log_info "Instalando workloads de .NET (android, wasm)..."
+        sudo dotnet workload install android wasm-tools || log_warn "No se pudieron instalar algunos workloads."
+    fi
 }
 
 install_cursor() {

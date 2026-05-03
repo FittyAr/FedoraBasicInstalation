@@ -72,6 +72,10 @@ has_nvidia() {
     lspci | grep -qi "nvidia"
 }
 
+has_amd() {
+    lspci | grep -qi -E "amd|ati"
+}
+
 
 # Cache de paquetes instalados
 declare -g -A INSTALLED_DNF
