@@ -57,10 +57,10 @@ source "$BASE_DIR/lib/presets.sh"
 
 # Inicializar entorno
 mkdir -p "$LOG_DIR"
-echo "--- Starting Session: $(date) ---" > "$SUMMARY_LOG"
+echo "$(printf "$STR_LOG_SESSION_START" "$(date)")" > "$SUMMARY_LOG"
 
 # EMERGENCIA: Corregir repositorios rotos de sesiones previas que impiden ejecutar DNF
-log_info "Verificando integridad de repositorios..."
+log_info "$STR_VERIFYING_REPOS"
 if [ -f "/etc/yum.repos.d/vscodium.repo" ]; then
     sudo sed -i 's/\[ vscodium \]/\[vscodium\]/g' /etc/yum.repos.d/vscodium.repo
 fi
@@ -71,12 +71,12 @@ fi
 sudo rm -f /etc/yum.repos.d/shiftkey-desktop.repo /etc/yum.repos.d/unityhub.repo /etc/yum.repos.d/teamviewer.repo /etc/yum.repos.d/AnyDesk-Fedora.repo
 
 # Sincronizar metadatos y aceptar llaves GPG de repositorios existentes automáticamente
-log_info "Sincronizando repositorios y aceptando llaves GPG..."
+log_info "$STR_SYNC_REPOS"
 sudo dnf makecache -y
 
 # Inicializar caches
 if ! build_master_json; then
-    log_error "Fallo critico al construir la base de datos de aplicaciones."
+    log_error "$STR_ERR_DB_BUILD"
     exit 1
 fi
 refresh_package_cache
@@ -200,7 +200,7 @@ show_repair_menu() {
 # Inicio
 log_info "$STR_ANALYZING_SYSTEM"
 init_apps_state
-log_info "Estado de aplicaciones inicializado."
+log_info "$STR_APP_STATE_INIT"
 
 if [ -z "$PRESET_FILE" ]; then
     mkdir -p "$PRESET_DIR"
@@ -214,7 +214,7 @@ else
     load_preset "$PRESET_FILE"
 fi
 
-log_info "Entrando en el bucle principal..."
+log_info "$STR_MAIN_LOOP_START"
 
 while true; do
     menu_args=()
@@ -247,12 +247,12 @@ while true; do
     echo "Menu args (${#menu_args[@]}): ${menu_args[@]}" > /tmp/fedora_installer_debug.log
     
     if [ ${#menu_args[@]} -eq 0 ]; then
-        log_error "El menu de software esta vacio. Verifica los archivos en config/apps/"
+        log_error "$STR_ERR_EMPTY_MENU"
         exit 1
     fi
     
     if [ $((${#menu_args[@]} % 2)) -ne 0 ]; then
-        log_error "Error interno: menu_args tiene un numero impar de elementos (${#menu_args[@]})"
+        log_error "$STR_ERR_ODD_MENU"
         exit 1
     fi
 
@@ -282,7 +282,7 @@ while true; do
 
     if [ $exit_status -ne 0 ] && [ $exit_status -ne 1 ]; then
         if [ $exit_status -eq 255 ]; then
-            log_warn "Whiptail interrumpido (ESC)"
+            log_warn "$STR_WHIPTAIL_ESC"
             exit 0
         else
             log_error "Whiptail error: $exit_status"
@@ -297,7 +297,7 @@ while true; do
     if [ $exit_status -eq 1 ]; then
         CHOICE="EXIT"
     elif [ -z "$CHOICE" ]; then
-        log_warn "Whiptail no retorno ninguna seleccion."
+        log_warn "$STR_WHIPTAIL_NO_SEL"
         CHOICE="EXIT"
     fi
 
@@ -330,7 +330,7 @@ for app_id in "${!SELECTED_STATE[@]}"; do
         if [[ "$FORCE_INSTALL" == "true" ]] || ! is_installed "$app_id"; then
             install_tiered "$app_id"
         else
-            log_info "$app_id ya esta instalado. Omitiendo..."
+            log_info "$(printf "$STR_ALREADY_INSTALLED" "$app_id")"
         fi
     fi
 done

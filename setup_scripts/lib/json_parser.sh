@@ -23,7 +23,7 @@ build_master_json() {
     done
     jq -s 'reduce .[] as $item ({}; .categories[$item.id] = $item)' "$tmp_dir/"*.json > "$MASTER_JSON_FILE" 2>/tmp/jq_err.log
     if [ $? -ne 0 ]; then
-        echo "Error building master JSON. Check /tmp/jq_err.log"
+        echo "$STR_ERR_MASTER_JSON"
         rm -rf "$tmp_dir"
         return 1
     fi

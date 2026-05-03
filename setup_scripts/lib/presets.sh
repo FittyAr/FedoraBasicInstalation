@@ -23,7 +23,7 @@ save_preset() {
     done
     
     if [ ${#selected_ids[@]} -eq 0 ]; then
-        log_warn "No apps selected. Saving empty preset."
+        log_warn "$STR_ERR_NO_APPS_SELECTED"
     fi
 
     # Generate JSON with versioning and metadata
@@ -32,21 +32,21 @@ save_preset() {
           '$ARGS.positional | {version: $ver, created_at: $date, selected_apps: .}' \
           --args "${selected_ids[@]}" > "$output_file"
     
-    log_to_file "$SUMMARY_LOG" "Preset saved: $output_file (Version: $PRESET_VERSION)"
+    log_to_file "$SUMMARY_LOG" "$(printf "$STR_LOG_PRESET_SAVED" "$output_file" "$PRESET_VERSION")"
     whiptail --title "$STR_MENU_SAVE_PRESET" --msgbox "$STR_PRESET_SAVED $output_file" --ok-button "$STR_ACCEPT" 10 60
 }
 
 load_preset() {
     local file=$1
     if [ ! -f "$file" ]; then
-        log_error "Preset file not found: $file"
+        log_error "$(printf "$STR_ERR_PRESET_NOT_FOUND" "$file")"
         return 1
     fi
     
     # Version and Compatibility Check
     local p_ver=$(jq -r '.version // "legacy"' "$file")
     if [ "$p_ver" != "$PRESET_VERSION" ]; then
-        log_warn "Preset version mismatch: $p_ver vs $PRESET_VERSION"
+        log_warn "$(printf "$STR_WARN_PRESET_VERSION" "$p_ver" "$PRESET_VERSION")"
         # We continue but warn the user if we find issues
     fi
 
@@ -88,8 +88,8 @@ load_preset() {
         fi
     done < <(jq -r '.selected_apps[]?' "$file" 2>/dev/null)
 
-    log_success "Preset loaded: $file ($count apps)"
-    log_to_file "$SUMMARY_LOG" "Preset loaded: $file ($count apps, version $p_ver)"
+    log_success "$(printf "$STR_LOG_PRESET_LOADED" "$file" "$count")"
+    log_to_file "$SUMMARY_LOG" "$(printf "$STR_LOG_PRESET_LOADED" "$file" "$count") (version $p_ver)"
     return 0
 }
 
@@ -98,7 +98,7 @@ choose_preset_ui() {
     local files=("$PRESET_DIR"/*.json)
     
     if [ ! -e "${files[0]}" ]; then
-        whiptail --title "$STR_MENU_LOAD_PRESET" --msgbox "No presets found in $PRESET_DIR" --ok-button "$STR_ACCEPT" 10 60
+        whiptail --title "$STR_MENU_LOAD_PRESET" --msgbox "$(printf "$STR_ERR_NO_PRESETS" "$PRESET_DIR")" --ok-button "$STR_ACCEPT" 10 60
         return 1
     fi
     

@@ -4,14 +4,14 @@ add_rpm_fusion() {
     if rpm -q rpmfusion-free-release &>/dev/null; then
         return 0
     fi
-    log_info "Añadiendo repositorios RPM Fusion (Free & Non-Free)..."
+    log_info "$STR_ADDING_RPM_FUSION"
     sudo dnf install -y \
         https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
-        https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm || log_warn "Error al instalar RPM Fusion."
+        https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm || log_warn "$STR_ERR_RPM_FUSION"
 }
 
 add_vscode_repo() {
-    log_info "Añadiendo repositorio de Visual Studio Code..."
+    log_info "$(printf "$STR_ADDING_REPO" "Visual Studio Code")"
     sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
     sudo tee /etc/yum.repos.d/vscode.repo <<EOF
 [code]
@@ -24,19 +24,19 @@ EOF
 }
 
 add_brave_repo() {
-    log_info "Añadiendo repositorio de Brave Browser..."
+    log_info "$(printf "$STR_ADDING_REPO" "Brave Browser")"
     sudo dnf config-manager addrepo --from-repofile=https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
     sudo rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc
 }
 
 add_edge_repo() {
-    log_info "Añadiendo repositorio de Microsoft Edge..."
+    log_info "$(printf "$STR_ADDING_REPO" "Microsoft Edge")"
     sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
     sudo dnf config-manager addrepo --from-repofile=https://packages.microsoft.com/config/fedora/$(rpm -E %fedora)/prod.repo
 }
 
 add_unity_repo() {
-    log_info "Añadiendo repositorio de Unity Hub (Oficial)..."
+    log_info "$(printf "$STR_ADDING_REPO" "Unity Hub")"
     sudo rpm --import https://hub.unity3d.com/linux/repos/rpm/stable/repodata/repomd.xml.key
     sudo tee /etc/yum.repos.d/unityhub.repo <<EOF
 [unityhub]
@@ -50,7 +50,7 @@ EOF
 }
 
 add_google_chrome_repo() {
-    log_info "Añadiendo repositorio de Google Chrome..."
+    log_info "$(printf "$STR_ADDING_REPO" "Google Chrome")"
     sudo rpm --import https://dl.google.com/linux/linux_signing_key.pub
     sudo tee /etc/yum.repos.d/google-chrome.repo <<EOF
 [google-chrome]
@@ -63,7 +63,7 @@ EOF
 }
 
 add_cursor_repo() {
-    log_info "Añadiendo repositorio de Cursor..."
+    log_info "$(printf "$STR_ADDING_REPO" "Cursor")"
     sudo rpm --import https://downloads.cursor.com/keys/anysphere.asc
     sudo tee /etc/yum.repos.d/cursor.repo <<EOF
 [cursor]
@@ -77,7 +77,7 @@ EOF
 }
 
 add_antigravity_repo() {
-    log_info "Añadiendo repositorio de Antigravity..."
+    log_info "$(printf "$STR_ADDING_REPO" "Antigravity")"
     sudo tee /etc/yum.repos.d/antigravity.repo <<EOF
 [antigravity-rpm]
 name=Antigravity RPM Repository
@@ -88,7 +88,7 @@ EOF
 }
 
 add_microsoft_repo() {
-    log_info "Añadiendo repositorio de Microsoft (.NET/Edge)..."
+    log_info "$(printf "$STR_ADDING_REPO" "Microsoft (.NET/Edge)")"
     sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
     # Fallback to Fedora 41 if 44 is not yet in Microsoft repos
     local fed_ver=$(rpm -E %fedora)
@@ -97,7 +97,7 @@ add_microsoft_repo() {
 }
 
 add_github_desktop_repo() {
-    log_info "Añadiendo repositorio de GitHub Desktop (Mirror Estable)..."
+    log_info "$(printf "$STR_ADDING_REPO" "GitHub Desktop")"
     sudo rpm --import https://mirror.mwt.me/shiftkey-desktop/gpgkey
     sudo tee /etc/yum.repos.d/mwt-packages.repo <<EOF
 [mwt-packages]
@@ -111,25 +111,25 @@ EOF
 }
 
 add_docker_repo() {
-    log_info "Añadiendo repositorio de Docker..."
+    log_info "$(printf "$STR_ADDING_REPO" "Docker")"
     sudo dnf config-manager addrepo --from-repofile=https://download.docker.com/linux/fedora/docker-ce.repo
 }
 
 
 add_warp_repo() {
-    log_info "Añadiendo repositorio de Warp Terminal..."
+    log_info "$(printf "$STR_ADDING_REPO" "Warp Terminal")"
     sudo rpm --import https://releases.warp.dev/linux/keys/warp.asc
     sudo sh -c 'echo -e "[warpdotdev]\nname=warpdotdev\nbaseurl=https://releases.warp.dev/linux/rpm/stable\nenabled=1\ngpgcheck=1\ngpgkey=https://releases.warp.dev/linux/keys/warp.asc" > /etc/yum.repos.d/warpdotdev.repo'
 }
 
 add_tailscale_repo() {
-    log_info "Añadiendo repositorio de Tailscale..."
+    log_info "$(printf "$STR_ADDING_REPO" "Tailscale")"
     sudo dnf config-manager addrepo --from-repofile=https://pkgs.tailscale.com/stable/fedora/tailscale.repo
 }
 
 
 add_teamviewer_repo() {
-    log_info "Añadiendo repositorio de TeamViewer (Oficial)..."
+    log_info "$(printf "$STR_ADDING_REPO" "TeamViewer")"
     sudo rpm --import https://linux.teamviewer.com/pubkey/currentkey.asc
     sudo tee /etc/yum.repos.d/teamviewer.repo <<EOF
 [teamviewer]
@@ -143,7 +143,7 @@ EOF
 }
 
 add_anydesk_repo() {
-    log_info "Añadiendo repositorio de AnyDesk..."
+    log_info "$(printf "$STR_ADDING_REPO" "AnyDesk")"
     sudo rpm --import https://keys.anydesk.com/repos/RPM-GPG-KEY
     sudo tee /etc/yum.repos.d/AnyDesk-Fedora.repo <<EOF
 [anydesk]
@@ -156,7 +156,7 @@ EOF
 }
 
 add_vscodium_repo() {
-    log_info "Añadiendo repositorio de VSCodium..."
+    log_info "$(printf "$STR_ADDING_REPO" "VSCodium")"
     sudo rm -f "/etc/yum.repos.d/ vscodium .repo"
     sudo rpm --import https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/-/raw/master/pub.gpg
     sudo sh -c 'echo -e "[vscodium]\nname=vscodium\nbaseurl=https://download.vscodium.com/rpms/\nenabled=1\ngpgcheck=1\ngpgkey=https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/-/raw/master/pub.gpg" > /etc/yum.repos.d/vscodium.repo'
