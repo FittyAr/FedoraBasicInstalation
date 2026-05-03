@@ -50,8 +50,10 @@
         "es": "Ejecuta software de Windows facilmente en Linux.",
         "en": "Run Windows software easily on Linux."
       },
+      "dnf_pkg": "bottles",
       "flatpak_id": "com.usebottles.bottles",
       "priority": [
+        "dnf",
         "flatpak"
       ]
     },
@@ -134,8 +136,10 @@
         "es": "Interfaz grafica para gestionar tus nubes con Rclone.",
         "en": "Graphical interface to manage your clouds with Rclone."
       },
+      "dnf_pkg": "rclone-browser",
       "flatpak_id": "com.rcloneui.RcloneUI",
       "priority": [
+        "dnf",
         "flatpak"
       ]
     },
