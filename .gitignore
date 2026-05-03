@@ -15,7 +15,6 @@ install_debug.txt
 # Archivos de sistema / temporales
 /tmp/
 /logs/
-/presets/
     
 # AppImages y binarios descargados (si se descargan en el root)
 *.AppImage

@@ -148,6 +148,7 @@ finish_btrfs_snapshot() {
 # Cache de paquetes instalados
 declare -g -A INSTALLED_DNF
 declare -g -A INSTALLED_FLATPAK
+declare -g -A INSTALLED_SNAP
 
 check_dnf_lock() {
     # Verificar si DNF está bloqueado (vía pgrep para mayor simplicidad y efectividad)
@@ -177,6 +178,8 @@ refresh_package_cache() {
     declare -g -A INSTALLED_DNF
     unset INSTALLED_FLATPAK
     declare -g -A INSTALLED_FLATPAK
+    unset INSTALLED_SNAP
+    declare -g -A INSTALLED_SNAP
     
     # Cache DNF (solo nombres de paquetes)
     # Usamos dnf repoquery para mayor rapidez o awk sobre dnf list
@@ -189,6 +192,16 @@ refresh_package_cache() {
         while read -r fid; do
             INSTALLED_FLATPAK["$fid"]=1
         done < <(flatpak list --columns=application 2>/dev/null)
+    fi
+
+    # Cache Snap
+    if command -v snap &> /dev/null; then
+        while read -r sid; do
+            # snap list format: Name Version Rev Tracking Publisher Notes
+            # We skip the header and take the first column
+            [ -z "$sid" ] || [ "$sid" == "Name" ] && continue
+            INSTALLED_SNAP["$sid"]=1
+        done < <(snap list 2>/dev/null | awk '{print $1}')
     fi
 }
 

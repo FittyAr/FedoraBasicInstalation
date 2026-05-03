@@ -1,28 +1,7 @@
 #!/bin/bash
 
 
-is_installed() {
-    local app_id=$1
-    local dnf_pkg=$(get_app_data "$app_id" "dnf_pkg")
-    local flatpak_id=$(get_app_data "$app_id" "flatpak_id")
-
-    # Verificar DNF en cache
-    if [ "$dnf_pkg" != "null" ] && [ -n "$dnf_pkg" ]; then
-        local base_pkg="${dnf_pkg%%.*}"
-        if [[ -n "${INSTALLED_DNF[$base_pkg]}" ]]; then
-            return 0
-        fi
-    fi
-
-    # Verificar Flatpak en cache
-    if [ "$flatpak_id" != "null" ] && [ -n "$flatpak_id" ]; then
-        if [[ -n "${INSTALLED_FLATPAK[$flatpak_id]}" ]]; then
-            return 0
-        fi
-    fi
-
-    return 1
-}
+# Note: is_installed is now provided by detection.sh
 
 
 install_tiered() {

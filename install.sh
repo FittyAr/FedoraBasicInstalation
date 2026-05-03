@@ -49,6 +49,7 @@ source "$BASE_DIR/locales/$LANG_CODE.sh"
 
 # --- CARGAR RESTO DE LIBRERIAS ---
 source "$BASE_DIR/lib/json_parser.sh"
+source "$BASE_DIR/lib/detection.sh"
 source "$BASE_DIR/lib/repos.sh"
 source "$BASE_DIR/lib/installer.sh"
 source "$BASE_DIR/lib/package_manager.sh"
