@@ -21,11 +21,36 @@ declare -A REPO_MAPPING=(
 
 
 install_docker_full() {
-    log_info "Instalando Docker Engine & Docker Desktop components..."
-    sudo dnf install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    log_info "Instalando Docker Desktop (Requiere GNOME)..."
+    
+    # 1. Asegurar GNOME y dependencias (pedido por el usuario)
+    log_info "Instalando componentes de GNOME y dependencias..."
+    sudo dnf groupinstall -y "GNOME"
+    sudo dnf install -y gnome-terminal dnf-plugins-core
+    
+    # 2. Configurar repositorio de Docker (necesario para dependencias del RPM)
+    log_info "Configurando repositorio de Docker..."
+    sudo dnf config-manager addrepo --from-repofile=https://download.docker.com/linux/fedora/docker-ce.repo
+    
+    # 3. Descargar e instalar Docker Desktop
+    local temp_dir=$(mktemp -d)
+    log_info "Descargando Docker Desktop RPM..."
+    # URL genérica para la última versión estable en x86_64
+    if curl -L https://desktop.docker.com/linux/main/amd64/docker-desktop-x86_64.rpm -o "$temp_dir/docker-desktop.rpm"; then
+        log_info "Instalando Docker Desktop..."
+        sudo dnf install -y "$temp_dir/docker-desktop.rpm"
+    else
+        log_error "No se pudo descargar el RPM de Docker Desktop."
+        return 1
+    fi
+    
+    # 4. Post-instalación
     sudo systemctl enable --now docker
     sudo usermod -aG docker $USER
-    log_warn "Docker instalado. Debes cerrar sesión para usarlo sin sudo."
+    
+    rm -rf "$temp_dir"
+    log_success "Docker Desktop instalado correctamente."
+    log_warn "Debes cerrar sesión e iniciar sesión en GNOME para usar Docker Desktop."
 }
 
 install_tailscale_full() {

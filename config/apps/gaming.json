@@ -54,8 +54,9 @@
         "es": "Frontend para emuladores, motores de juegos y mas.",
         "en": "Frontend for emulators, game engines, and more."
       },
+      "dnf_pkg": "retroarch",
       "flatpak_id": "org.libretro.RetroArch",
-      "priority": ["flatpak"]
+      "priority": ["dnf", "flatpak"]
     },
     {
       "id": "mame",
@@ -173,8 +174,9 @@
         "es": "Cliente de YouTube Music nativo para Linux.",
         "en": "Native YouTube Music client for Linux."
       },
+      "dnf_pkg": "audiotube",
       "flatpak_id": "org.kde.audiotube",
-      "priority": ["flatpak"]
+      "priority": ["dnf", "flatpak"]
     },
     {
       "id": "helvum",
@@ -183,8 +185,9 @@
         "es": "Patchbay grafico para Audio en PipeWire.",
         "en": "Graphical patchbay for Audio in PipeWire."
       },
+      "dnf_pkg": "helvum",
       "flatpak_id": "org.pipewire.Helvum",
-      "priority": ["flatpak"]
+      "priority": ["dnf", "flatpak"]
     },
     {
       "id": "mediainfo",
@@ -214,8 +217,9 @@
         "es": "Editor de mapas de azulejos flexible y facil de usar.",
         "en": "Flexible and easy-to-use tile map editor."
       },
+      "dnf_pkg": "tiled",
       "flatpak_id": "org.mapeditor.Tiled",
-      "priority": ["flatpak"]
+      "priority": ["dnf", "flatpak"]
     },
     {
       "id": "librecad",

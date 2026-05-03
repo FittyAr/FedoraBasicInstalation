@@ -20,10 +20,10 @@
         "es": "Drivers oficiales privativos para maximo rendimiento 3D.",
         "en": "Official proprietary drivers for maximum 3D performance."
       },
-      "dnf_pkg": "akmod-nvidia",
+      "dnf_pkg": "akmod-nvidia xorg-x11-drv-nvidia-cuda nvidia-settings xorg-x11-drv-nvidia-libs",
       "requires_repo": "rpm-fusion",
       "priority": ["dnf"],
-      "repair": "sudo dnf reinstall -y akmod-nvidia xorg-x11-drv-nvidia-cuda && sudo akmods --force"
+      "repair": "sudo dnf reinstall -y akmod-nvidia xorg-x11-drv-nvidia-cuda nvidia-settings xorg-x11-drv-nvidia-libs && sudo akmods --force"
     },
     {
       "id": "tlp",
@@ -68,14 +68,9 @@
       "priority": ["dnf"]
     },
     {
-      "id": "flatseal",
-      "name": "Flatseal",
-      "description": {
-        "es": "Gestor de permisos para aplicaciones Flatpak.",
-        "en": "Permission manager for Flatpak applications."
-      },
+      "dnf_pkg": "flatseal",
       "flatpak_id": "com.github.tchx84.Flatseal",
-      "priority": ["flatpak"]
+      "priority": ["dnf", "flatpak"]
     },
     {
       "id": "fastfetch",
