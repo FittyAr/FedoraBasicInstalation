@@ -113,12 +113,12 @@
     },
     {
       "id": "barrier",
-      "name": "Barrier",
+      "name": "Barrier / Input Leap",
       "description": {
-        "es": "Comparte raton y teclado entre varios PCs.",
-        "en": "Share mouse and keyboard between multiple PCs."
+        "es": "Comparte raton y teclado entre varios PCs. (Soporta Input Leap).",
+        "en": "Share mouse and keyboard between multiple PCs. (Supports Input Leap)."
       },
-      "dnf_pkg": "barrier",
+      "dnf_pkg": "barrier input-leap",
       "flatpak_id": "com.github.debauchee.barrier",
       "priority": [
         "dnf",

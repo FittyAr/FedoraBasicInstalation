@@ -170,6 +170,24 @@ check_app_status() {
                 return 0
             fi
             ;;
+        "handbrake")
+            # En Fedora/RPMFusion, el GUI es 'ghb' y el CLI es 'HandBrakeCLI'
+            if is_binary_in_path "ghb" || is_binary_in_path "HandBrakeCLI"; then
+                return 0
+            fi
+            ;;
+        "barrier")
+            # Barrier ha sido reemplazado por Input Leap en muchas distros
+            if is_binary_in_path "barrier" || is_binary_in_path "input-leap" || is_binary_in_path "barrierc"; then
+                return 0
+            fi
+            ;;
+        "flatseal")
+            # El binario de Flatseal en DNF suele ser el ID de Flatpak
+            if is_binary_in_path "flatseal" || is_binary_in_path "com.github.tchx84.Flatseal"; then
+                return 0
+            fi
+            ;;
     esac
 
     return 1

@@ -163,7 +163,7 @@
         "es": "Conversor de video multiformato de codigo abierto.",
         "en": "Open-source multi-format video converter."
       },
-      "dnf_pkg": "handbrake",
+      "dnf_pkg": "HandBrake-gui",
       "flatpak_id": "fr.handbrake.ghb",
       "priority": ["dnf", "flatpak"]
     },
