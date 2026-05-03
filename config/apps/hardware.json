@@ -157,6 +157,16 @@
       "dnf_pkg": "peazip",
       "flatpak_id": "io.github.peazip.PeaZip",
       "priority": ["dnf", "flatpak"]
+    },
+    {
+      "id": "btrfs-assistant",
+      "name": "Btrfs Assistant",
+      "description": {
+        "es": "Herramienta grafica para gestionar subvolúmenes y snapshots Btrfs.",
+        "en": "Graphical tool to manage Btrfs subvolumes and snapshots."
+      },
+      "dnf_pkg": "btrfs-assistant",
+      "priority": ["dnf"]
     }
   ]
 }

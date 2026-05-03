@@ -76,6 +76,34 @@ has_amd() {
     lspci | grep -qi -E "amd|ati"
 }
 
+create_btrfs_snapshot() {
+    # Verificar si el sistema de archivos de la raíz es Btrfs
+    if findmnt -n -o FSTYPE / | grep -q "btrfs"; then
+        log_info "$STR_BTRFS_EXPLANATION"
+        log_info "Btrfs detectado. Generando snapshot de seguridad..."
+        
+        local timestamp=$(date +'%Y%m%d_%H%M%S')
+        local snap_name="/.snapshot_pre_install_$timestamp"
+        
+        # Intentar crear el snapshot
+        if sudo btrfs subvolume snapshot / "$snap_name" &>/dev/null; then
+            log_success "Snapshot de seguridad creado en: $snap_name"
+            log_to_file "$SUMMARY_LOG" "Btrfs snapshot created: $snap_name"
+        else
+            log_error "ERROR: $STR_BTRFS_FAIL_TITLE"
+            # Preguntar al usuario si desea continuar vía whiptail
+            if whiptail --title "$STR_BTRFS_FAIL_TITLE" --yesno \
+                "$STR_BTRFS_FAIL_MSG" \
+                12 70; then
+                log_warn "Continuando instalacion sin snapshot de seguridad (bajo riesgo del usuario)."
+            else
+                log_error "$STR_BTRFS_ABORTED"
+                exit 1
+            fi
+        fi
+    fi
+}
+
 
 # Cache de paquetes instalados
 declare -g -A INSTALLED_DNF

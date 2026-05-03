@@ -19,6 +19,7 @@ while [[ $# -gt 0 ]]; do
         -p|--preset) PRESET_FILE="$2"; shift 2 ;;
         -d|--preset-dir) export PRESET_DIR="$2"; shift 2 ;;
         -g|--debug) export DEBUG_MODE=true; shift ;;
+        -f|--force) export FORCE_INSTALL=true; shift ;;
         -h|--help) show_help ;;
         *) shift ;;
     esac
@@ -321,9 +322,16 @@ while true; do
     esac
 done
 
+# Generar Snapshot si es Btrfs antes de proceder
+create_btrfs_snapshot
+
 for app_id in "${!SELECTED_STATE[@]}"; do
-    if [[ "${SELECTED_STATE[$app_id]}" == "ON" ]] && ! is_installed "$app_id"; then
-        install_tiered "$app_id"
+    if [[ "${SELECTED_STATE[$app_id]}" == "ON" ]]; then
+        if [[ "$FORCE_INSTALL" == "true" ]] || ! is_installed "$app_id"; then
+            install_tiered "$app_id"
+        else
+            log_info "$app_id ya esta instalado. Omitiendo..."
+        fi
     fi
 done
 

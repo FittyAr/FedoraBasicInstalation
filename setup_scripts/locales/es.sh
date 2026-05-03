@@ -45,3 +45,8 @@ export STR_MENU_SECTION_SOFTWARE="--- CATEGORIAS DE SOFTWARE ---"
 
 export STR_COPR_CONFIRM_TITLE="Repositorio de Terceros (COPR)"
 export STR_COPR_CONFIRM_MSG="Se requiere habilitar el repositorio COPR '%s'. ¿Desea proceder?"
+
+export STR_BTRFS_EXPLANATION="Se ha detectado Btrfs. El script creara un snapshot (respaldo instantaneo) de tu sistema para que puedas restaurarlo facilmente en caso de error durante la instalacion."
+export STR_BTRFS_FAIL_TITLE="Fallo de Snapshot"
+export STR_BTRFS_FAIL_MSG="No se pudo crear el snapshot de seguridad. ¿Deseas continuar la instalacion SIN respaldo o prefieres abortar para investigar la causa?"
+export STR_BTRFS_ABORTED="Instalacion abortada por seguridad."
