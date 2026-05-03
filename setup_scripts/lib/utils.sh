@@ -118,6 +118,7 @@ create_btrfs_snapshot() {
             # Preguntar al usuario si desea continuar vía whiptail
             if whiptail --title "$STR_BTRFS_FAIL_TITLE" --yesno \
                 "$STR_BTRFS_FAIL_MSG" \
+                --yes-button "$STR_CONTINUE" --no-button "$STR_ABORT" \
                 12 70; then
                 log_warn "Continuando instalacion sin snapshot de seguridad (bajo riesgo del usuario)."
             else
@@ -155,7 +156,7 @@ check_dnf_lock() {
         
         if whiptail --title "$STR_DNF_LOCKED_TITLE" --yesno \
             "$STR_DNF_LOCKED_MSG" \
-            --ok-button "$STR_WAIT" --cancel-button "$STR_ABORT" \
+            --yes-button "$STR_WAIT" --no-button "$STR_ABORT" \
             12 70; then
             
             log_info "$STR_DNF_WAITING"
