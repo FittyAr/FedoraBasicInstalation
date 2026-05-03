@@ -68,6 +68,12 @@
       "priority": ["dnf"]
     },
     {
+      "id": "flatseal",
+      "name": "Flatseal",
+      "description": {
+        "es": "Gestiona permisos de aplicaciones Flatpak de forma grafica.",
+        "en": "Manage Flatpak application permissions graphically."
+      },
       "dnf_pkg": "flatseal",
       "flatpak_id": "com.github.tchx84.Flatseal",
       "priority": ["dnf", "flatpak"]

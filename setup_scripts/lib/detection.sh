@@ -106,6 +106,56 @@ check_app_status() {
         return 0
     fi
 
+    # 7. Casos Especiales (Heuristica avanzada para apps problematicas)
+    case "$app_id" in
+        "rpmfusion")
+            # Verificar si los repositorios estan habilitados
+            if [ -f "/etc/yum.repos.d/rpmfusion-free.repo" ] || [ -f "/etc/yum.repos.d/rpmfusion-nonfree.repo" ]; then
+                return 0
+            fi
+            ;;
+        "codecs")
+            # Si ffmpeg (version completa de rpmfusion) esta, asumimos codecs instalados
+            if is_dnf_installed "ffmpeg" || is_binary_in_path "ffmpeg"; then
+                # Pero dnf-free tambien tiene ffmpeg-free, asi que mejor verificar si viene de rpmfusion
+                if dnf list installed ffmpeg 2>/dev/null | grep -qi "rpmfusion" || [ -f "/usr/bin/ffmpeg" ]; then
+                    return 0
+                fi
+            fi
+            ;;
+        "github-desktop")
+            # A veces el binario se llama diferente o esta en /opt
+            if is_binary_in_path "github-desktop" || [ -f "/usr/bin/github-desktop" ] || [ -f "/opt/GitHubDesktop/github-desktop" ]; then
+                return 0
+            fi
+            ;;
+        "dotnet-full")
+            # Verificar si el comando dotnet existe y es version 10+ (o simplemente si existe)
+            if is_binary_in_path "dotnet"; then
+                return 0
+            fi
+            ;;
+        "photogimp")
+            # PhotoGIMP instala un archivo .desktop local para GIMP
+            if [ -f "$HOME/.local/share/applications/org.gimp.GIMP.desktop" ]; then
+                # Verificar si el archivo contiene referencias a PhotoGIMP o si simplemente existe (GIMP flatpak no lo crea ahi)
+                if grep -qi "PhotoGIMP" "$HOME/.local/share/applications/org.gimp.GIMP.desktop" 2>/dev/null; then
+                    return 0
+                fi
+                # Si no tiene el string, el simple hecho de estar en ~/.local/ para GIMP flatpak es sospechoso de PhotoGIMP
+                return 0
+            fi
+            # Backup: verificar directorios de plug-ins que PhotoGIMP suele crear
+            if [ -d "$HOME/.var/app/org.gimp.GIMP/config/GIMP/2.10/plug-ins" ]; then
+                # Si hay muchos archivos ahi, es probable que sea PhotoGIMP
+                local count=$(ls "$HOME/.var/app/org.gimp.GIMP/config/GIMP/2.10/plug-ins" 2>/dev/null | wc -l)
+                if [ $count -gt 5 ]; then
+                    return 0
+                fi
+            fi
+            ;;
+    esac
+
     return 1
 }
 

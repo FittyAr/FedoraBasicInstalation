@@ -91,9 +91,11 @@
         "en": "Intuitive graphical interface to manage Git and GitHub."
       },
       "dnf_pkg": "github-desktop",
+      "flatpak_id": "io.github.shiftey.Desktop",
       "repo_func": "add_github_desktop_repo",
       "priority": [
-        "dnf"
+        "dnf",
+        "flatpak"
       ]
     },
     {
@@ -213,6 +215,7 @@
         "es": "Kit de desarrollo completo de Microsoft.",
         "en": "Full Microsoft development kit."
       },
+      "dnf_pkg": "dotnet-sdk-10.0",
       "custom_func": "install_dotnet_full",
       "priority": [
         "custom"
