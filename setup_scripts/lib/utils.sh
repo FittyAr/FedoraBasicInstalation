@@ -80,7 +80,31 @@ create_btrfs_snapshot() {
     # Verificar si el sistema de archivos de la raíz es Btrfs
     if findmnt -n -o FSTYPE / | grep -q "btrfs"; then
         log_info "$STR_BTRFS_EXPLANATION"
-        log_info "Btrfs detectado. Generando snapshot de seguridad..."
+        
+        # Intentar detectar snapper
+        if command -v snapper &>/dev/null; then
+            local config=$(snapper list-configs 2>/dev/null | grep -w "/" | awk '{print $1}')
+            if [ -n "$config" ]; then
+                log_info "$(printf -- "$STR_SNAPPER_DETECTED" "$config")"
+                local timestamp=$(date +'%Y-%m-%d %H:%M:%S')
+                local desc="Antes de instalar apps: $timestamp"
+                
+                # Intentar crear snapshot pre
+                local pre_id=$(sudo snapper -c "$config" create --type pre --print-number --description "$desc")
+                
+                if [ -n "$pre_id" ] && [[ "$pre_id" =~ ^[0-9]+$ ]]; then
+                    export SNAPPER_CONFIG="$config"
+                    export SNAPPER_PRE_ID="$pre_id"
+                    log_success "$(printf -- "$STR_SNAPPER_PRE_SUCCESS" "$pre_id")"
+                    log_to_file "$SUMMARY_LOG" "Snapper 'pre' snapshot created: ID $pre_id (config: $config)"
+                    return 0
+                else
+                    log_warn "Fallo al crear snapshot con Snapper. Intentando método btrfs directo..."
+                fi
+            fi
+        fi
+
+        log_info "$STR_BTRFS_DIRECT_START"
         
         local timestamp=$(date +'%Y%m%d_%H%M%S')
         local snap_name="/.snapshot_pre_install_$timestamp"
@@ -104,10 +128,48 @@ create_btrfs_snapshot() {
     fi
 }
 
+finish_btrfs_snapshot() {
+    if [ -n "$SNAPPER_PRE_ID" ] && [ -n "$SNAPPER_CONFIG" ]; then
+        log_info "$STR_SNAPPER_POST_START"
+        local timestamp=$(date +'%Y-%m-%d %H:%M:%S')
+        local desc="Post instalación de apps: $timestamp"
+        
+        if sudo snapper -c "$SNAPPER_CONFIG" create --type post --pre-number "$SNAPPER_PRE_ID" --description "$desc" &>/dev/null; then
+            log_success "$STR_SNAPPER_POST_SUCCESS"
+            log_to_file "$SUMMARY_LOG" "Snapper 'post' snapshot created for ID $SNAPPER_PRE_ID"
+        else
+            log_warn "No se pudo crear el snapshot 'post' de Snapper."
+        fi
+    fi
+}
+
 
 # Cache de paquetes instalados
 declare -g -A INSTALLED_DNF
 declare -g -A INSTALLED_FLATPAK
+
+check_dnf_lock() {
+    # Verificar si DNF está bloqueado (vía pgrep para mayor simplicidad y efectividad)
+    if pgrep -x "dnf" > /dev/null || [ -f /var/run/dnf.pid ]; then
+        log_warn "$STR_DNF_LOCKED_TITLE"
+        
+        if whiptail --title "$STR_DNF_LOCKED_TITLE" --yesno \
+            "$STR_DNF_LOCKED_MSG" \
+            --ok-button "$STR_WAIT" --cancel-button "$STR_ABORT" \
+            12 70; then
+            
+            log_info "$STR_DNF_WAITING"
+            # Esperar en un bucle ligero
+            while pgrep -x "dnf" > /dev/null || [ -f /var/run/dnf.pid ]; do
+                sleep 5
+            done
+            log_success "DNF liberado. Continuando..."
+        else
+            log_error "$STR_DNF_ABORTED"
+            exit 1
+        fi
+    fi
+}
 
 refresh_package_cache() {
     unset INSTALLED_DNF
@@ -138,7 +200,7 @@ confirm_copr() {
     if [ "$NON_INTERACTIVE" = true ]; then
         return 0
     fi
-    local msg=$(printf "${STR_COPR_CONFIRM_MSG:-Se requiere el repositorio COPR %s. ¿Proceder?}" "$repo")
+    local msg=$(printf -- "${STR_COPR_CONFIRM_MSG:-Se requiere el repositorio COPR %s. ¿Proceder?}" "$repo")
     echo -e "${YELLOW}${WARN} $msg${NC}" > /dev/tty
     echo -ne "${CYAN}¿Desea proceder? (s/n): ${NC}" > /dev/tty
     read -r response < /dev/tty

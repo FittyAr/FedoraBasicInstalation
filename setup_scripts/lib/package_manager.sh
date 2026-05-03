@@ -31,16 +31,16 @@ install_tiered() {
     local log_file="$LOG_DIR/${app_id}.log"
     
     log_info "$STR_INSTALLING_APP $app_id..."
-    log_to_file "$SUMMARY_LOG" "$(printf "$STR_LOG_INSTALL_START" "$app_id")"
+    log_to_file "$SUMMARY_LOG" "$(printf -- "$STR_LOG_INSTALL_START" "$app_id")"
 
     local redirect=""
     if [ "$DEBUG_MODE" = true ]; then
         redirect="&>> $log_file"
-        echo "$(printf "$STR_LOG_INSTALL_LOG_HEADER" "$app_id")" > "$log_file"
+        echo "$(printf -- "$STR_LOG_INSTALL_LOG_HEADER" "$app_id")" > "$log_file"
     fi
 
     for method in "${priority[@]}"; do
-        log_to_file "$SUMMARY_LOG" "$(printf "$STR_LOG_TRYING" "$method" "$app_id")"
+        log_to_file "$SUMMARY_LOG" "$(printf -- "$STR_LOG_TRYING" "$method" "$app_id")"
         case "$method" in
             "dnf")
                 local pkg=$(get_app_data "$app_id" "dnf_pkg")
@@ -81,7 +81,7 @@ install_tiered() {
 
                 if [ $? -eq 0 ]; then
                     log_success "$app_id $STR_INSTALLED_VIA_DNF"
-                    log_to_file "$SUMMARY_LOG" "$(printf "$STR_LOG_SUCCESS" "$app_id" "DNF")"
+                    log_to_file "$SUMMARY_LOG" "$(printf -- "$STR_LOG_SUCCESS" "$app_id" "DNF")"
                     return 0
                 fi
                 ;;
@@ -100,7 +100,7 @@ install_tiered() {
 
                 if [ $? -eq 0 ]; then
                     log_success "$app_id $STR_INSTALLED_VIA_FLATPAK"
-                    log_to_file "$SUMMARY_LOG" "$(printf "$STR_LOG_SUCCESS" "$app_id" "Flatpak")"
+                    log_to_file "$SUMMARY_LOG" "$(printf -- "$STR_LOG_SUCCESS" "$app_id" "Flatpak")"
                     return 0
                 fi
                 ;;
@@ -113,7 +113,7 @@ install_tiered() {
                         $func
                     fi
                     if [ $? -eq 0 ]; then
-                        log_to_file "$SUMMARY_LOG" "$(printf "$STR_LOG_SUCCESS" "$app_id" "Custom Function")"
+                        log_to_file "$SUMMARY_LOG" "$(printf -- "$STR_LOG_SUCCESS" "$app_id" "Custom Function")"
                         return 0
                     fi
                 fi
@@ -122,6 +122,6 @@ install_tiered() {
     done
 
     log_error "$STR_INSTALL_FAILED ($app_id)"
-    log_to_file "$SUMMARY_LOG" "$(printf "$STR_LOG_FAILED" "$app_id")"
+    log_to_file "$SUMMARY_LOG" "$(printf -- "$STR_LOG_FAILED" "$app_id")"
     return 1
 }

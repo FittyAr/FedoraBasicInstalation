@@ -57,7 +57,7 @@ source "$BASE_DIR/lib/presets.sh"
 
 # Inicializar entorno
 mkdir -p "$LOG_DIR"
-echo "$(printf "$STR_LOG_SESSION_START" "$(date)")" > "$SUMMARY_LOG"
+echo "$(printf -- "$STR_LOG_SESSION_START" "$(date)")" > "$SUMMARY_LOG"
 
 # EMERGENCIA: Corregir repositorios rotos de sesiones previas que impiden ejecutar DNF
 log_info "$STR_VERIFYING_REPOS"
@@ -71,6 +71,7 @@ fi
 sudo rm -f /etc/yum.repos.d/shiftkey-desktop.repo /etc/yum.repos.d/unityhub.repo /etc/yum.repos.d/teamviewer.repo /etc/yum.repos.d/AnyDesk-Fedora.repo
 
 # Sincronizar metadatos y aceptar llaves GPG de repositorios existentes automáticamente
+check_dnf_lock
 log_info "$STR_SYNC_REPOS"
 sudo dnf makecache -y
 
@@ -322,6 +323,9 @@ while true; do
     esac
 done
 
+# Comprobar bloqueos antes de iniciar el bloque de instalación masiva
+check_dnf_lock
+
 # Generar Snapshot si es Btrfs antes de proceder
 create_btrfs_snapshot
 
@@ -330,10 +334,11 @@ for app_id in "${!SELECTED_STATE[@]}"; do
         if [[ "$FORCE_INSTALL" == "true" ]] || ! is_installed "$app_id"; then
             install_tiered "$app_id"
         else
-            log_info "$(printf "$STR_ALREADY_INSTALLED" "$app_id")"
+            log_info "$(printf -- "$STR_ALREADY_INSTALLED" "$app_id")"
         fi
     fi
 done
+finish_btrfs_snapshot
 
 log_success "$STR_PROCESS_COMPLETED"
 log_info "$STR_SUMMARY_LOG_CREATED $SUMMARY_LOG"

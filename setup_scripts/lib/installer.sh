@@ -138,7 +138,7 @@ install_codecs() {
 
 install_pkg() {
     local pkg=$1
-    log_info "$(printf "$STR_INSTALL_DNF_PKG" "$pkg")"
+    log_info "$(printf -- "$STR_INSTALL_DNF_PKG" "$pkg")"
     sudo dnf install -y "$pkg"
 }
 

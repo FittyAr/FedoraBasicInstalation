@@ -51,6 +51,13 @@ export STR_BTRFS_FAIL_TITLE="Fallo de Snapshot"
 export STR_BTRFS_FAIL_MSG="No se pudo crear el snapshot de seguridad. ¿Deseas continuar la instalacion SIN respaldo o prefieres abortar para investigar la causa?"
 export STR_BTRFS_ABORTED="Instalacion abortada por seguridad."
 
+# Snapshot Snapper
+export STR_SNAPPER_DETECTED="[*] Snapper detectado (config: %s). Generando snapshot 'pre'..."
+export STR_SNAPPER_PRE_SUCCESS="[+] Snapshot pre-instalación creado (ID: %s)"
+export STR_SNAPPER_POST_START="[*] Cerrando snapshot de Snapper..."
+export STR_SNAPPER_POST_SUCCESS="[+] Snapshot post-instalación creado."
+export STR_BTRFS_DIRECT_START="[*] Generando snapshot de seguridad (btrfs directo)..."
+
 # Nuevas cadenas para i18n total
 export STR_LOG_SESSION_START="--- Iniciando Sesion: %s ---"
 export STR_VERIFYING_REPOS="[*] Verificando integridad de repositorios..."
@@ -117,6 +124,14 @@ export STR_RUSTDESK_SUCCESS="[+] RustDesk configurado correctamente."
 
 export STR_INSTALL_LAZYDOCKER="[*] Instalando LazyDocker mediante script oficial..."
 export STR_INSTALL_DNF_PKG="[*] Instalando %s via DNF..."
+
+# Bloqueos de DNF
+export STR_DNF_LOCKED_TITLE="DNF Ocupado / Bloqueado"
+export STR_DNF_LOCKED_MSG="Se ha detectado que otro proceso esta usando DNF (posiblemente una actualizacion automatica).\n\n¿Deseas esperar a que termine o prefieres abortar la instalacion para evitar conflictos?"
+export STR_WAIT="Esperar"
+export STR_ABORT="Abortar"
+export STR_DNF_WAITING="[*] Esperando a que DNF se libere..."
+export STR_DNF_ABORTED="[!] Instalacion abortada para evitar conflictos de DNF."
 
 # Presets y Logs de sistema
 export STR_ERR_NO_APPS_SELECTED="[!] No hay aplicaciones seleccionadas. Guardando preset vacio."
