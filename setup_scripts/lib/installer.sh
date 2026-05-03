@@ -151,6 +151,33 @@ setup_antigravity() {
     log_success "Antigravity Agent listo para operar."
 }
 
+install_rustdesk_custom() {
+    log_info "Instalando RustDesk vía Flatpak (Ámbito de Usuario)..."
+    
+    # 1. Añadir remoto Flathub en ámbito de usuario
+    flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    
+    # 2. Descargar el archivo .flatpak (buscando la última versión en GitHub)
+    local temp_dir=$(mktemp -d)
+    log_info "Buscando última versión de RustDesk en GitHub..."
+    local latest_url=$(curl -s https://api.github.com/repos/rustdesk/rustdesk/releases/latest | grep "browser_download_url.*\.flatpak" | cut -d '"' -f 4 | head -n 1)
+    
+    if [ -n "$latest_url" ]; then
+        log_info "Descargando RustDesk Flatpak..."
+        curl -L "$latest_url" -o "$temp_dir/rustdesk.flatpak"
+        
+        # 3. Instalar
+        log_info "Instalando archivo .flatpak..."
+        flatpak --user install -y "$temp_dir/rustdesk.flatpak"
+    else
+        log_warn "No se pudo encontrar el archivo .flatpak en GitHub. Intentando instalación directa desde Flathub (si existe)..."
+        flatpak --user install -y flathub com.rustdesk.RustDesk
+    fi
+    
+    rm -rf "$temp_dir"
+    log_success "RustDesk configurado correctamente."
+}
+
 install_lazydocker_custom() {
     log_info "Instalando LazyDocker mediante script oficial..."
     curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash

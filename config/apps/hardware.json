@@ -131,8 +131,9 @@
         "es": "Control universal de iluminacion RGB.",
         "en": "Universal RGB lighting control."
       },
+      "dnf_pkg": "openrgb",
       "flatpak_id": "org.openrgb.OpenRGB",
-      "priority": ["flatpak"]
+      "priority": ["dnf", "flatpak"]
     },
     {
       "id": "waydroid",
@@ -143,7 +144,7 @@
       },
       "dnf_pkg": "waydroid",
       "custom_func": "install_waydroid_full",
-      "priority": ["custom"]
+      "priority": ["dnf", "custom"]
     },
 
     {
@@ -153,8 +154,9 @@
         "es": "Gestor de archivos comprimidos potente y libre.",
         "en": "Powerful and free compressed file manager."
       },
+      "dnf_pkg": "peazip",
       "flatpak_id": "io.github.peazip.PeaZip",
-      "priority": ["flatpak"]
+      "priority": ["dnf", "flatpak"]
     }
   ]
 }

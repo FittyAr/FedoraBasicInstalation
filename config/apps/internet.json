@@ -13,7 +13,10 @@
       "dnf_pkg": "brave-browser",
       "repo_func": "add_brave_repo",
       "flatpak_id": "com.brave.Browser",
-      "priority": ["dnf", "flatpak"]
+      "priority": [
+        "dnf",
+        "flatpak"
+      ]
     },
     {
       "id": "google-chrome",
@@ -24,7 +27,9 @@
       },
       "dnf_pkg": "google-chrome-stable",
       "repo_func": "add_google_chrome_repo",
-      "priority": ["dnf"]
+      "priority": [
+        "dnf"
+      ]
     },
     {
       "id": "telegram",
@@ -35,7 +40,10 @@
       },
       "dnf_pkg": "telegram-desktop",
       "flatpak_id": "org.telegram.desktop",
-      "priority": ["dnf", "flatpak"]
+      "priority": [
+        "dnf",
+        "flatpak"
+      ]
     },
     {
       "id": "discord",
@@ -46,17 +54,10 @@
       },
       "dnf_pkg": "discord",
       "flatpak_id": "com.discordapp.Discord",
-      "priority": ["dnf", "flatpak"]
-    },
-    {
-      "id": "yt-music",
-      "name": "YouTube Music",
-      "description": {
-        "es": "Cliente de escritorio para YouTube Music.",
-        "en": "Desktop client for YouTube Music."
-      },
-      "flatpak_id": "app.ytmdesktop.ytmdesktop",
-      "priority": ["flatpak"]
+      "priority": [
+        "dnf",
+        "flatpak"
+      ]
     },
     {
       "id": "bitwarden",
@@ -66,7 +67,9 @@
         "en": "Secure and open-source password manager."
       },
       "flatpak_id": "com.bitwarden.desktop",
-      "priority": ["flatpak"]
+      "priority": [
+        "flatpak"
+      ]
     },
     {
       "id": "localsend",
@@ -76,7 +79,9 @@
         "en": "Share files locally easily."
       },
       "flatpak_id": "org.localsend.localsend_app",
-      "priority": ["flatpak"]
+      "priority": [
+        "flatpak"
+      ]
     },
     {
       "id": "warpinator",
@@ -87,7 +92,10 @@
       },
       "dnf_pkg": "warpinator",
       "flatpak_id": "org.x.Warpinator",
-      "priority": ["dnf", "flatpak"]
+      "priority": [
+        "dnf",
+        "flatpak"
+      ]
     },
     {
       "id": "syncthing",
@@ -98,7 +106,10 @@
       },
       "dnf_pkg": "syncthing",
       "flatpak_id": "me.kozec.syncthingtk",
-      "priority": ["dnf", "flatpak"]
+      "priority": [
+        "dnf",
+        "flatpak"
+      ]
     },
     {
       "id": "barrier",
@@ -109,7 +120,10 @@
       },
       "dnf_pkg": "barrier",
       "flatpak_id": "com.github.debauchee.barrier",
-      "priority": ["dnf", "flatpak"]
+      "priority": [
+        "dnf",
+        "flatpak"
+      ]
     },
     {
       "id": "fragments",
@@ -118,8 +132,12 @@
         "es": "Cliente BitTorrent simple y moderno para GNOME.",
         "en": "Simple and modern BitTorrent client for GNOME."
       },
+      "dnf_pkg": "fragments",
       "flatpak_id": "de.haeckerfelix.Fragments",
-      "priority": ["flatpak"]
+      "priority": [
+        "dnf",
+        "flatpak"
+      ]
     },
     {
       "id": "qbittorrent",
@@ -130,7 +148,10 @@
       },
       "dnf_pkg": "qbittorrent",
       "flatpak_id": "org.qbittorrent.qBittorrent",
-      "priority": ["dnf", "flatpak"]
+      "priority": [
+        "dnf",
+        "flatpak"
+      ]
     },
     {
       "id": "teamviewer",
@@ -141,7 +162,9 @@
       },
       "dnf_pkg": "teamviewer",
       "repo_func": "add_teamviewer_repo",
-      "priority": ["dnf"]
+      "priority": [
+        "dnf"
+      ]
     },
     {
       "id": "anydesk",
@@ -152,7 +175,9 @@
       },
       "dnf_pkg": "anydesk",
       "repo_func": "add_anydesk_repo",
-      "priority": ["dnf"]
+      "priority": [
+        "dnf"
+      ]
     },
     {
       "id": "rustdesk",
@@ -161,8 +186,10 @@
         "es": "Infraestructura de escritorio remoto de codigo abierto.",
         "en": "Open-source remote desktop infrastructure."
       },
-      "flatpak_id": "com.rustdesk.RustDesk",
-      "priority": ["flatpak"]
+      "custom_func": "install_rustdesk_custom",
+      "priority": [
+        "custom"
+      ]
     },
     {
       "id": "ferdium",
@@ -172,7 +199,9 @@
         "en": "All-in-one messaging browser."
       },
       "flatpak_id": "org.ferdium.Ferdium",
-      "priority": ["flatpak"]
+      "priority": [
+        "flatpak"
+      ]
     }
   ]
 }
