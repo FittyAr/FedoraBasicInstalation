@@ -32,8 +32,8 @@
         "es": "Optimizacion avanzada de energia para laptops.",
         "en": "Advanced power optimization for laptops."
       },
-      "dnf_pkg": "tlp",
-      "priority": ["dnf"],
+      "custom_func": "install_tlp_full",
+      "priority": ["custom"],
       "repair": "sudo systemctl enable --now tlp && sudo tlp start"
     },
     {

@@ -183,3 +183,24 @@ install_lazydocker_custom() {
     curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
 }
 
+install_tlp_full() {
+    log_info "$STR_LOG_INSTALL_START tlp"
+    
+    # Eliminar paquetes en conflicto si existen
+    if rpm -q tuned-ppd &>/dev/null; then
+        log_warn "Detectado tuned-ppd (en conflicto). Eliminando para permitir la instalacion de TLP..."
+        sudo dnf remove -y tuned-ppd
+    fi
+    
+    # Desactivar power-profiles-daemon ya que TLP lo reemplaza y causa conflictos de servicios
+    if systemctl is-active power-profiles-daemon &>/dev/null || systemctl is-enabled power-profiles-daemon &>/dev/null; then
+        log_warn "Desactivando power-profiles-daemon para evitar conflictos con TLP..."
+        sudo systemctl disable --now power-profiles-daemon
+    fi
+
+    sudo dnf install -y tlp tlp-rdw
+    sudo systemctl enable --now tlp
+    sudo tlp start
+    log_success "TLP instalado y configurado correctamente."
+}
+
