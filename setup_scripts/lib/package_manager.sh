@@ -36,7 +36,7 @@ install_tiered() {
                     fi
                     
                     if [ $repo_status -eq 0 ]; then
-                        sudo dnf makecache --quiet
+                        sudo dnf makecache -y --quiet
                     else
                         continue
                     fi

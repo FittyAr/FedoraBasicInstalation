@@ -6,7 +6,7 @@
         "es": "Limpiar Cache DNF",
         "en": "Clean DNF Cache"
       },
-      "command": "sudo dnf clean all && sudo dnf makecache"
+      "command": "sudo dnf clean all && sudo dnf makecache -y"
     },
     {
       "id": "flatpak_repair",

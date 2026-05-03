@@ -259,20 +259,17 @@ while true; do
     fi
 
     tmp_choice=$(mktemp)
-    if [ "$DEBUG_MODE" = true ]; then
-        log_info "DEBUG: Whiptail command: whiptail --title \"$STR_MAIN_MENU_TITLE\" --menu \"$STR_SELECTION_HINT\" $HEIGHT $WIDTH $LIST_HEIGHT ${menu_args[*]}"
-    fi
-
-    # Forzar whiptail a usar el terminal si el modo debug está activo
+    
+    # Preparar comando de whiptail
     wt_cmd=(whiptail --title "$STR_MAIN_MENU_TITLE - $STR_SELECTED_COUNT $total_sel" --menu "$STR_SELECTION_HINT" \
         --ok-button "$STR_OK" --cancel-button "$STR_MENU_EXIT" \
         $HEIGHT $WIDTH $LIST_HEIGHT "${menu_args[@]}")
-    
+
     if [ "$DEBUG_MODE" = true ]; then
-        "${wt_cmd[@]}" 2>"$tmp_choice"
-    else
-        "${wt_cmd[@]}" 2>"$tmp_choice"
+        log_info "DEBUG: Whiptail command: ${wt_cmd[*]}"
     fi
+
+    "${wt_cmd[@]}" 2>"$tmp_choice"
     
     exit_status=$?
     if [ -f "$tmp_choice" ]; then
