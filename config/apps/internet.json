@@ -187,6 +187,7 @@
         "en": "Open-source remote desktop infrastructure."
       },
       "custom_func": "install_rustdesk_custom",
+      "flatpak_id": "com.rustdesk.RustDesk",
       "priority": [
         "custom"
       ]

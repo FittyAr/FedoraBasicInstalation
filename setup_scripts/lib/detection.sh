@@ -7,9 +7,12 @@
 is_dnf_installed() {
     local pkg=$1
     [ -z "$pkg" ] && return 1
-    # Limpiar el nombre del paquete (quitar extensiones si las hay)
-    local base_pkg="${pkg%%.*}"
+    # Limpiar el nombre del paquete (quitar extensión de arquitectura si existe, ej: .x86_64)
+    # Usamos %. en lugar de %%. para no romper nombres con puntos (ej: dotnet-sdk-10.0)
+    local base_pkg="${pkg%.*}"
     [[ -n "${INSTALLED_DNF[$base_pkg]}" ]] && return 0
+    # Caso secundario: si el paquete exacto está en el hash
+    [[ -n "${INSTALLED_DNF[$pkg]}" ]] && return 0
     return 1
 }
 
@@ -44,12 +47,13 @@ has_desktop_file() {
         "/usr/local/share/applications"
         "$HOME/.local/share/applications"
         "/var/lib/flatpak/exports/share/applications"
-        "$HOME/.var/app/*/desktop" # Para algunos flatpaks especificos
+        "$HOME/.var/app/*/desktop" 
     )
     
     for path in "${paths[@]}"; do
-        # Buscar por id exacto o patrones comunes
-        if ls "$path"/*"$app_id"*.desktop &> /dev/null; then
+        [ ! -d "$path" ] && continue
+        # Búsqueda insensible a mayúsculas para mayor compatibilidad (ej: RustDesk.desktop)
+        if find "$path" -maxdepth 1 -iname "*$app_id*.desktop" | grep -q "."; then
             return 0
         fi
     done
@@ -152,6 +156,18 @@ check_app_status() {
                 if [ $count -gt 5 ]; then
                     return 0
                 fi
+            fi
+            ;;
+        "nodejs")
+            # Verificar binarios estándar de Node y NPM
+            if is_binary_in_path "node" || is_binary_in_path "npm"; then
+                return 0
+            fi
+            ;;
+        "obs-studio")
+            # El binario de OBS Studio suele llamarse simplemente 'obs'
+            if is_binary_in_path "obs"; then
+                return 0
             fi
             ;;
     esac

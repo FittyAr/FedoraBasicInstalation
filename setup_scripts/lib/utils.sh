@@ -182,10 +182,10 @@ refresh_package_cache() {
     declare -g -A INSTALLED_SNAP
     
     # Cache DNF (solo nombres de paquetes)
-    # Usamos dnf repoquery para mayor rapidez o awk sobre dnf list
+    # Usamos rpm -qa para máxima velocidad y compatibilidad (DNF4 y DNF5)
     while read -r pkg; do
-        INSTALLED_DNF["${pkg%%.*}"]=1
-    done < <(dnf list installed --quiet | awk '{print $1}' | tail -n +2)
+        [ -n "$pkg" ] && INSTALLED_DNF["$pkg"]=1
+    done < <(rpm -qa --queryformat '%{NAME}\n')
 
     # Cache Flatpak
     if command -v flatpak &> /dev/null; then
