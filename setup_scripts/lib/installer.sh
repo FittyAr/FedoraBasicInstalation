@@ -281,8 +281,9 @@ uninstall_tlp_full() {
 }
 
 uninstall_rpm_fusion() {
-    log_info "Eliminando repositorios RPM Fusion..."
-    sudo dnf remove -y rpmfusion-free-release rpmfusion-nonfree-release
-    sudo dnf clean all
+    # RPM Fusion es un repositorio esencial del proyecto y no puede ser eliminado.
+    # Esta funcion existe como stub de seguridad para evitar eliminaciones accidentales.
+    log_warn "RPM Fusion es un repositorio obligatorio del sistema y no puede ser desinstalado desde este script."
+    return 0
 }
 

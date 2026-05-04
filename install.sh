@@ -123,7 +123,13 @@ init_apps_state() {
         CAT_COUNTS["$cat_id"]=0
         while IFS="|" read -r app_id app_name app_desc; do
             [ -z "$app_id" ] && continue
-            SELECTED_STATE["$app_id"]="OFF"
+            local is_mandatory=$(get_app_data "$app_id" "mandatory" 2>/dev/null)
+            if [[ "$is_mandatory" == "true" ]]; then
+                SELECTED_STATE["$app_id"]="ON"
+                ((CAT_COUNTS["$cat_id"]++))
+            else
+                SELECTED_STATE["$app_id"]="OFF"
+            fi
         done < <(get_apps_by_category "$cat_id")
     done < <(get_categories)
 }
@@ -137,8 +143,14 @@ show_category_ui() {
     while IFS="|" read -r app_id app_name app_desc; do
         local state="${SELECTED_STATE[$app_id]}"
         local display_name="$app_name"
+        local is_mandatory=$(get_app_data "$app_id" "mandatory" 2>/dev/null)
         if is_installed "$app_id"; then
             display_name="$STR_INSTALLED_TAG $app_name"
+        fi
+        # Las apps obligatorias se muestran siempre marcadas con una nota
+        if [[ "$is_mandatory" == "true" ]]; then
+            display_name="🔒 $app_name [ESENCIAL]"
+            state="ON"
         fi
         
         args+=("$display_name" "$app_desc" "$state")
@@ -160,7 +172,11 @@ show_category_ui() {
 
     if [ $exit_status -eq 0 ]; then
         CAT_COUNTS["$cat_id"]=0
-        while IFS="|" read -r aid rest; do SELECTED_STATE["$aid"]="OFF"; done < <(get_apps_by_category "$cat_id")
+        while IFS="|" read -r aid rest; do
+            local m=$(get_app_data "$aid" "mandatory" 2>/dev/null)
+            # Nunca poner OFF a las apps obligatorias
+            [[ "$m" != "true" ]] && SELECTED_STATE["$aid"]="OFF"
+        done < <(get_apps_by_category "$cat_id")
         eval set -- "$selected"
         for name in "$@"; do
             local aid="${LOCAL_NAME_MAP["$name"]}"
@@ -169,6 +185,14 @@ show_category_ui() {
                 ((CAT_COUNTS["$cat_id"]++))
             fi
         done
+        # Re-forzar apps obligatorias por si el usuario las desmarcó
+        while IFS="|" read -r aid aname rest; do
+            local m=$(get_app_data "$aid" "mandatory" 2>/dev/null)
+            if [[ "$m" == "true" ]] && [[ "${SELECTED_STATE[$aid]}" != "ON" ]]; then
+                SELECTED_STATE["$aid"]="ON"
+                ((CAT_COUNTS["$cat_id"]++))
+            fi
+        done < <(get_apps_by_category "$cat_id")
     fi
 }
 
@@ -330,7 +354,18 @@ check_dnf_lock
 # Generar Snapshot si es Btrfs antes de proceder
 create_btrfs_snapshot
 
+# PASO 0: Instalar RPM Fusion PRIMERO (es esencial para el resto de los paquetes)
+# Se instala siempre, independientemente del estado SELECTED_STATE, ya que es obligatorio
+if ! is_installed "rpmfusion"; then
+    log_info "Instalando repositorios RPM Fusion (obligatorio, paso previo)..."
+    install_tiered "rpmfusion"
+else
+    log_info "$(printf -- "$STR_ALREADY_INSTALLED" "rpmfusion")"
+fi
+
 for app_id in "${!SELECTED_STATE[@]}"; do
+    # Omitir rpmfusion ya que ya fue instalado en el paso 0
+    [[ "$app_id" == "rpmfusion" ]] && continue
     if [[ "${SELECTED_STATE[$app_id]}" == "ON" ]]; then
         if [[ "$FORCE_INSTALL" == "true" ]] || ! is_installed "$app_id"; then
             install_tiered "$app_id"
@@ -340,6 +375,15 @@ for app_id in "${!SELECTED_STATE[@]}"; do
     fi
 done
 finish_btrfs_snapshot
+
+# Refrescar metadatos de fwupd para evitar el error de LVFS en Discover/GNOME Software
+# ("Failed to download metadata for lvfs: network is unreachable")
+if command -v fwupdmgr &>/dev/null; then
+    log_info "Actualizando metadatos de fwupd (LVFS) para evitar errores en Discover..."
+    sudo fwupdmgr refresh --force &>/dev/null && \
+        log_success "Metadatos de fwupd actualizados correctamente." || \
+        log_warn "No se pudieron actualizar los metadatos de fwupd (verificar conexion a internet)."
+fi
 
 log_success "$STR_PROCESS_COMPLETED"
 log_info "$STR_SUMMARY_LOG_CREATED $SUMMARY_LOG"

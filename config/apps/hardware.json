@@ -11,7 +11,7 @@
         "en": "Essential repositories for non-free software and codecs."
       },
       "custom_func": "add_rpm_fusion",
-      "custom_uninstall_func": "uninstall_rpm_fusion",
+      "mandatory": true,
       "priority": ["custom"]
     },
     {

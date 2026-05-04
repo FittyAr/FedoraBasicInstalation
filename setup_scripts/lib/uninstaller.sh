@@ -59,6 +59,9 @@ show_uninstaller_category_ui() {
     
     while IFS="|" read -r app_id app_name app_desc; do
         if is_installed "$app_id"; then
+            # No mostrar apps obligatorias en el desinstalador
+            local is_mandatory=$(get_app_data "$app_id" "mandatory" 2>/dev/null)
+            [[ "$is_mandatory" == "true" ]] && continue
             args+=("$app_id" "$app_name" "OFF")
             LOCAL_NAME_MAP["$app_id"]="$app_name"
         fi
@@ -124,6 +127,13 @@ uninstall_app() {
     fi
     
     log_info "$(printf -- "$STR_UNINSTALLING_APP" "$app_name")"
+    
+    # Protección especial: RPM Fusion es un repositorio obligatorio del sistema
+    if [[ "$app_id" == "rpmfusion" ]]; then
+        log_warn "RPM Fusion es un repositorio obligatorio y no puede ser desinstalado desde este script."
+        [ "$DEBUG_MODE" == "true" ] && exec 1>&3 2>&4 3>&- 4>&-
+        return 0
+    fi
     
     local dnf_pkg=$(get_app_data "$app_id" "dnf_pkg")
     local flatpak_id=$(get_app_data "$app_id" "flatpak_id")
