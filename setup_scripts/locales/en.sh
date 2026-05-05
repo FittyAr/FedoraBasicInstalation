@@ -129,6 +129,7 @@ export STR_ERR_RUSTDESK_GH="[!] Could not find .flatpak file on GitHub. Attempti
 export STR_RUSTDESK_SUCCESS="[+] RustDesk configured successfully."
 
 export STR_INSTALL_LAZYDOCKER="[*] Installing LazyDocker via official script..."
+export STR_INSTALL_ZEROTIER="[*] Installing ZeroTier One via official script..."
 export STR_INSTALL_DNF_PKG="[*] Installing %s via DNF..."
 
 # DNF Locks

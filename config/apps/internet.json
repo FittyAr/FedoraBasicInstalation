@@ -204,6 +204,19 @@
       "priority": [
         "flatpak"
       ]
+    },
+    {
+      "id": "zerotier",
+      "name": "ZeroTier One",
+      "description": {
+        "es": "Crea redes virtuales seguras de punto a punto.",
+        "en": "Create secure peer-to-peer virtual networks."
+      },
+      "custom_func": "install_zerotier_custom",
+      "custom_uninstall_func": "uninstall_zerotier_custom",
+      "priority": [
+        "custom"
+      ]
     }
   ]
 }

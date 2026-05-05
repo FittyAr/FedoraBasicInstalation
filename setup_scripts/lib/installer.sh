@@ -280,6 +280,35 @@ uninstall_tlp_full() {
     fi
 }
 
+install_zerotier_custom() {
+    log_info "$STR_INSTALL_ZEROTIER"
+    
+    # Siguiendo la documentación oficial
+    # 1. Importar llave GPG
+    curl -s 'https://raw.githubusercontent.com/zerotier/ZeroTierOne/main/doc/contact%40zerotier.com.gpg' | gpg --import
+    
+    # 2. Ejecutar script de instalación oficial con verificación GPG
+    if z=$(curl -s 'https://install.zerotier.com/' | gpg); then 
+        echo "$z" | sudo bash
+    else
+        log_error "Fallo la verificacion GPG del script de instalacion de ZeroTier."
+        return 1
+    fi
+    
+    # 3. Habilitar e iniciar servicio
+    sudo systemctl enable --now zerotier-one
+    log_success "ZeroTier One instalado y servicio iniciado."
+}
+
+uninstall_zerotier_custom() {
+    log_info "Eliminando ZeroTier One..."
+    sudo systemctl stop zerotier-one &>/dev/null
+    sudo systemctl disable zerotier-one &>/dev/null
+    sudo dnf remove -y zerotier-one
+    sudo rm -rf /var/lib/zerotier-one
+    log_success "ZeroTier One eliminado (incluyendo configuracion)."
+}
+
 uninstall_rpm_fusion() {
     # RPM Fusion es un repositorio esencial del proyecto y no puede ser eliminado.
     # Esta funcion existe como stub de seguridad para evitar eliminaciones accidentales.

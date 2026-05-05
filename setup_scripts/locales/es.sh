@@ -129,6 +129,7 @@ export STR_ERR_RUSTDESK_GH="[!] No se pudo encontrar el archivo .flatpak en GitH
 export STR_RUSTDESK_SUCCESS="[+] RustDesk configurado correctamente."
 
 export STR_INSTALL_LAZYDOCKER="[*] Instalando LazyDocker mediante script oficial..."
+export STR_INSTALL_ZEROTIER="[*] Instalando ZeroTier One mediante script oficial..."
 export STR_INSTALL_DNF_PKG="[*] Instalando %s via DNF..."
 
 # Bloqueos de DNF
